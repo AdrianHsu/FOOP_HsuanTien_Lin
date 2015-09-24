@@ -64,7 +64,7 @@ public class PlayGame {
 		pFrom.dropPairs();
 		pTo.dropPairs();
 	}
-	public static void game(ArrayList<Player> players, int ig) {
+	public static void game(ArrayList<Player> players, int i) {
 		int to = i % NUM_OF_PLAYERS;
 		int from = (i + 1) % NUM_OF_PLAYERS;
 		int toIndex = players.get(to).getIndex();
