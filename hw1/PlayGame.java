@@ -64,6 +64,47 @@ public class PlayGame {
 		pFrom.dropPairs();
 		pTo.dropPairs();
 	}
+	public static void game(ArrayList<Player> players, int i) {
+		int to = i % NUM_OF_PLAYERS;
+		int from = (i + 1) % NUM_OF_PLAYERS;
+		int toIndex = players.get(to).getIndex();
+		int fromIndex = players.get(from).getIndex();
+
+		int cardIndex = (1 + (int)(Math.random() * 100)) % players.get(from).getHand().size();
+
+		System.out.println("Player" + toIndex + " draws a card from Player" + fromIndex
+		+ " " + players.get(from).getHand().get(cardIndex).cardToString());
+
+		drawing(players.get(to), players.get(from), cardIndex);
+		drawCardsOutput(players, to, from);
+
+		if(players.get(to).getHand().size() == 0 && players.get(from).getHand().size() == 0) {
+			if(toIndex > fromIndex) {
+				int tmp = toIndex;
+				toIndex = fromIndex;
+				fromIndex = toIndex;
+			}
+			System.out.println("Player" + toIndex + " and Player" + fromIndex + " win");
+			NUM_OF_PLAYERS -= 2;
+			//seems that removal will call trim automatically, hence from -> to
+			players.remove(from);
+			players.remove(to);
+			players.trimToSize();
+		} else {
+			if(players.get(from).getHand().size() == 0) {
+				System.out.println("Player" + fromIndex + " wins");
+				NUM_OF_PLAYERS--;
+				players.remove(from);
+				players.trimToSize();
+			} else if(players.get(to).getHand().size() == 0) {
+				System.out.println("Player" + toIndex + " wins");
+				NUM_OF_PLAYERS--;
+				players.remove(to);
+				players.trimToSize();
+			}
+		}
+	}
+	static int NUM_OF_PLAYERS = 4;
 
 	public static void main(String [] args) {
 
@@ -71,7 +112,6 @@ public class PlayGame {
 		deckOfCards.shuffle();
 
 		// init players
-		int NUM_OF_PLAYERS = 4;
 		ArrayList<Player> players = new ArrayList<Player>();
 		for(int i = 0; i < NUM_OF_PLAYERS; i++) {
 			players.add( new Player(i) );
@@ -103,46 +143,9 @@ public class PlayGame {
 
 		while(!IS_OVER) {
 
-			int to = i % NUM_OF_PLAYERS;
-			int from = (i + 1) % NUM_OF_PLAYERS;
-			int toIndex = players.get(to).getIndex();
-			int fromIndex = players.get(from).getIndex();
-
-			int cardIndex = (1 + (int)(Math.random() * 100)) % players.get(from).getHand().size();
-
-			System.out.println("Player" + toIndex + " draws a card from Player" + fromIndex
-			+ " " + players.get(from).getHand().get(cardIndex).cardToString());
-
-			drawing(players.get(to), players.get(from), cardIndex);
-			drawCardsOutput(players, to, from);
-
-			if(players.get(to).getHand().size() == 0 && players.get(from).getHand().size() == 0) {
-				if(toIndex > fromIndex) {
-					int tmp = toIndex;
-					toIndex = fromIndex;
-					fromIndex = toIndex;
-				}
-				System.out.println("Player" + toIndex + " and Player" + fromIndex + " win");
-				NUM_OF_PLAYERS -= 2;
-				//seems that removal will call trim automatically, hence from -> to
-				players.remove(from);
-				players.remove(to);
-				players.trimToSize();
+			game(players, i);
+			if(NUM_OF_PLAYERS < 4) {
 				IS_OVER = true;
-			} else {
-				if(players.get(from).getHand().size() == 0) {
-					System.out.println("Player" + fromIndex + " wins");
-					NUM_OF_PLAYERS--;
-					players.remove(from);
-					players.trimToSize();
-					IS_OVER = true;
-				} else if(players.get(to).getHand().size() == 0) {
-					System.out.println("Player" + toIndex + " wins");
-					NUM_OF_PLAYERS--;
-					players.remove(to);
-					players.trimToSize();
-					IS_OVER = true;
-				}
 			}
 			i++;
 		}
@@ -152,43 +155,7 @@ public class PlayGame {
 		IS_OVER = false;
 		while(!IS_OVER) {
 
-			int to = i % NUM_OF_PLAYERS;
-			int from = (i + 1) % NUM_OF_PLAYERS;
-			int toIndex = players.get(to).getIndex();
-			int fromIndex = players.get(from).getIndex();
-
-			int cardIndex = (1 + (int)(Math.random() * 100)) % players.get(from).getHand().size();
-
-			System.out.println("Player" + toIndex + " draws a card from Player" + fromIndex
-			+ " " + players.get(from).getHand().get(cardIndex).cardToString());
-
-			drawing(players.get(to), players.get(from), cardIndex);
-			drawCardsOutput(players, to, from);
-
-			if(players.get(to).getHand().size() == 0 && players.get(from).getHand().size() == 0) {
-				if(toIndex > fromIndex) {
-					int tmp = toIndex;
-					toIndex = fromIndex;
-					fromIndex = toIndex;
-				}
-				System.out.println("Player" + toIndex + " and Player" + fromIndex + " win");
-				NUM_OF_PLAYERS -= 2;
-				players.remove(from);
-				players.remove(to);
-				players.trimToSize();
-			} else {
-				if(players.get(from).getHand().size() == 0) {
-					System.out.println("Player" + fromIndex + " wins");
-					NUM_OF_PLAYERS--;
-					players.remove(from);
-					players.trimToSize();
-				} else if(players.get(to).getHand().size() == 0) {
-					System.out.println("Player" + toIndex + " wins");
-					NUM_OF_PLAYERS--;
-					players.remove(to);
-					players.trimToSize();
-				}
-			}
+			game(players, i);
 			if(NUM_OF_PLAYERS == 1) {
 				IS_OVER = true;
 			}
