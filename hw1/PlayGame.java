@@ -7,10 +7,6 @@ public class PlayGame {
 			_players.get(j % 4).getHand().add( _deckOfCards.totalCards.get(j) );
 		}
 	}
-
-	public static void drawing(Player p1, Player p2, Card card) {
-
-	}
 	public static void sort(ArrayList<Player> _players) {
 		for(int i = 0; i < _players.size(); i++) {
 			_players.get(i).sortHand();
@@ -29,6 +25,9 @@ public class PlayGame {
 		}
 	}
 
+	public static void drawing(Player p1, Player p2, Card card) {
+
+	}
 
 	public static void main(String [] args) {
 
@@ -41,12 +40,23 @@ public class PlayGame {
 			players.add( new Player() );
 		}
 		// deal cards
-		dealCards(players, deckOfCards);
 		System.out.println("Deal cards");
+		dealCards(players, deckOfCards);
 
 		// sort all players' cards
 		sort(players);
 		// Cards Output
 		cardsOutput(players);
+		
+		// drop cards, first time for all players
+		System.out.println("Drop cards");
+		for(int i = 0; i < 4; i++) {
+			players.get(i).dropPairs();
+		}
+		// Cards Output
+		cardsOutput(players);
+		
+
+
 	}
 }
