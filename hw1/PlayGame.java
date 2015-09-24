@@ -18,6 +18,13 @@ public class PlayGame {
 		DeckOfCards deckOfCards = new DeckOfCards();
 		deckOfCards.shuffle();
 
+		if(!deckOfCards.totalCards.get(0).isJoker()) {
+
+			Card card;
+			card = (Card)deckOfCards.totalCards.get(0);
+			System.out.println( card.getRank() );
+		}
+
 		// // init players
 		// ArrayList<Player> players = new ArrayList<Player>();
 		// for(int i = 0; i < 4; i++) {
@@ -26,6 +33,5 @@ public class PlayGame {
 		// // deal cards
 		// dealCards(players, deckOfCards);
 
-		System.out.println("Hello, World!");
 	}
 }

@@ -1,6 +1,5 @@
-public class BaseCard {
+public abstract class BaseCard {
 	
-	public BaseCard(){};
-	public boolean isJoker;
-
+	// public BaseCard(){};
+	public abstract boolean isJoker();
 }
