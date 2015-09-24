@@ -11,6 +11,11 @@ public class PlayGame {
 	public static void drawing(Player p1, Player p2, Card card) {
 
 	}
+	public static void sort(ArrayList<Player> _players) {
+		for(int i = 0; i < _players.size(); i++) {
+			_players.get(i).sortHand();
+		}
+	}
 	public static void cardsOutput(ArrayList<Player> _players) {
 		
 		for(int i = 0; i < _players.size(); i++) {
@@ -39,6 +44,8 @@ public class PlayGame {
 		dealCards(players, deckOfCards);
 		System.out.println("Deal cards");
 
+		// sort all players' cards
+		sort(players);
 		// Cards Output
 		cardsOutput(players);
 	}

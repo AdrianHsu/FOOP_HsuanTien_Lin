@@ -21,5 +21,4 @@ public class DeckOfCards {
 	}
 
 	public static ArrayList<BaseCard> totalCards = new ArrayList<BaseCard>();
-
 }
