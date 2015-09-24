@@ -1,6 +1,12 @@
 JAVAFLAGS = -g 
 
-all: PlayGame
+all: hw1
 
-hw1: PlayGame.java 
-	javac $(JAVAFLAGS) PlayGame.java
+clean:
+	rm -f *.class
+
+# hw1: PlayGame.java DeckOfCards.java BaseCard.java Card.java JokerCard.java Player.java
+# 	javac $(JAVAFLAGS) PlayGame.java DeckOfCards.java BaseCard.java Card.java JokerCard.java Player.java
+
+hw1 : *.java
+	javac $(JAVAFLAGS) *java
