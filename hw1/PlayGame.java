@@ -54,8 +54,6 @@ public class PlayGame {
 			System.out.println("");
 		}
 	}
-		
-
 	public static void drawing(Player pTo, Player pFrom, int index) {
 
 		BaseCard drawCard = new BaseCard( pFrom.getHand().get(index) );
@@ -102,47 +100,50 @@ public class PlayGame {
 
 		int i = 0;
 		Boolean IS_OVER = false;
+
 		while(!IS_OVER) {
 
-			int to = i % 4;
-			int from = (i + 1) % 4;
+			int to = i % NUM_OF_PLAYERS;
+			int from = (i + 1) % NUM_OF_PLAYERS;
+			int toIndex = players.get(to).getIndex();
+			int fromIndex = players.get(from).getIndex();
+
 			int cardIndex = (1 + (int)(Math.random() * 100)) % players.get(from).getHand().size();
 
-			System.out.println("Player" + to + " draws a card from Player" + from
+			System.out.println("Player" + toIndex + " draws a card from Player" + fromIndex
 			+ " " + players.get(from).getHand().get(cardIndex).cardToString());
 
 			drawing(players.get(to), players.get(from), cardIndex);
 			drawCardsOutput(players, to, from);
 
 			if(players.get(to).getHand().size() == 0 && players.get(from).getHand().size() == 0) {
-				if(to > from) {
-					int tmp = to;
-					to = from;
-					from = to;
+				if(toIndex > fromIndex) {
+					int tmp = toIndex;
+					toIndex = fromIndex;
+					fromIndex = toIndex;
 				}
-				System.out.println("Player" + to + " and Player" + from + " win");
-				IS_OVER = true;
+				System.out.println("Player" + toIndex + " and Player" + fromIndex + " win");
 				NUM_OF_PLAYERS -= 2;
-				//seems that removal will trim automatically, so from (bigger one) first
-				players.remove(from); 
+				//seems that removal will call trim automatically, hence from -> to
+				players.remove(from);
 				players.remove(to);
 				players.trimToSize();
+				IS_OVER = true;
 			} else {
 				if(players.get(from).getHand().size() == 0) {
-					System.out.println("Player" + from + " wins");
-					IS_OVER = true;
+					System.out.println("Player" + fromIndex + " wins");
 					NUM_OF_PLAYERS--;
 					players.remove(from);
 					players.trimToSize();
-				} else if(players.get(to).getHand().size() == 0) {
-					System.out.println("Player" + to + " wins");
 					IS_OVER = true;
+				} else if(players.get(to).getHand().size() == 0) {
+					System.out.println("Player" + toIndex + " wins");
 					NUM_OF_PLAYERS--;
 					players.remove(to);
 					players.trimToSize();
+					IS_OVER = true;
 				}
 			}
-
 			i++;
 		}
 		System.out.println("Basic game over");
