@@ -165,12 +165,12 @@ public class PlayGame {
 			drawCardsOutput(players, to, from);
 
 			if(players.get(to).getHand().size() == 0 && players.get(from).getHand().size() == 0) {
-				if(to > from) {
-					int tmp = to;
-					to = from;
-					from = to;
+				if(toIndex > fromIndex) {
+					int tmp = toIndex;
+					toIndex = fromIndex;
+					fromIndex = toIndex;
 				}
-				System.out.println("Player" + toIndex + " and Player" + from + " win");
+				System.out.println("Player" + toIndex + " and Player" + fromIndex + " win");
 				NUM_OF_PLAYERS -= 2;
 				players.remove(from);
 				players.remove(to);
