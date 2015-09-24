@@ -11,19 +11,24 @@ public class PlayGame {
 	public static void drawing(Player p1, Player p2, Card card) {
 
 	}
+	public static void cardsOutput(ArrayList<Player> _players) {
+		
+		for(int i = 0; i < _players.size(); i++) {
+			System.out.print("Player" + i + ": ");
+
+			for(int j = 0; j < _players.get(i).getHand().size() - 1; j++) {
+				System.out.print( _players.get(i).getHand().get(j).cardToString() + " ");
+			}
+			int  last = _players.get(i).getHand().size() - 1;
+			System.out.println( _players.get(i).getHand().get(last).cardToString());
+		}
+	}
 
 
 	public static void main(String [] args) {
 
 		DeckOfCards deckOfCards = new DeckOfCards();
 		deckOfCards.shuffle();
-
-		// if(!deckOfCards.totalCards.get(0).isJoker()) {
-
-		// 	Card card;
-		// 	card = (Card)deckOfCards.totalCards.get(0);
-		// 	System.out.println( card.getRank() );
-		// }
 
 		// init players
 		ArrayList<Player> players = new ArrayList<Player>();
@@ -32,8 +37,9 @@ public class PlayGame {
 		}
 		// deal cards
 		dealCards(players, deckOfCards);
+		System.out.println("Deal cards");
 
-		System.out.println(players.get(1).getHand().size());
-
+		// Cards Output
+		cardsOutput(players);
 	}
 }
