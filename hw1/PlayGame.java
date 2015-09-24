@@ -123,9 +123,9 @@ public class PlayGame {
 				System.out.println("Player" + to + " and Player" + from + " win");
 				IS_OVER = true;
 				NUM_OF_PLAYERS -= 2;
-
+				//seems that removal will trim automatically, so from (bigger one) first
+				players.remove(from); 
 				players.remove(to);
-				players.remove(from);
 				players.trimToSize();
 			} else {
 				if(players.get(from).getHand().size() == 0) {
@@ -172,8 +172,8 @@ public class PlayGame {
 				}
 				System.out.println("Player" + toIndex + " and Player" + from + " win");
 				NUM_OF_PLAYERS -= 2;
-				players.remove(to);
 				players.remove(from);
+				players.remove(to);
 				players.trimToSize();
 			} else {
 				if(players.get(from).getHand().size() == 0) {
