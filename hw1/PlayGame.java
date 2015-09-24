@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.lang.Math;
 
 public class PlayGame {
 
@@ -26,8 +27,10 @@ public class PlayGame {
 	}
 	public static void drawCardsOutput(ArrayList<Player> _players, int to, int from) {
 		
+		int toIndex = _players.get(to).getIndex();
+		int fromIndex = _players.get(from).getIndex();
 		//to
-		System.out.print("Player" + to + ": ");
+		System.out.print("Player" + toIndex + ": ");
 		if(_players.get(to).getHand().size() != 0) {
 				
 			for(int j = 0; j < _players.get(to).getHand().size() - 1; j++) {
@@ -39,7 +42,7 @@ public class PlayGame {
 			System.out.println("");
 		}
 		//from
-		System.out.print("Player" + from + ": ");
+		System.out.print("Player" + fromIndex + ": ");
 		if(_players.get(from).getHand().size() != 0) {
 
 			for(int j = 0; j < _players.get(from).getHand().size() - 1; j++) {
@@ -73,7 +76,7 @@ public class PlayGame {
 		int NUM_OF_PLAYERS = 4;
 		ArrayList<Player> players = new ArrayList<Player>();
 		for(int i = 0; i < NUM_OF_PLAYERS; i++) {
-			players.add( new Player() );
+			players.add( new Player(i) );
 		}
 		// deal cards
 		System.out.println("Deal cards");
@@ -103,7 +106,7 @@ public class PlayGame {
 
 			int to = i % 4;
 			int from = (i + 1) % 4;
-			int cardIndex = (int) Math.random() % players.get(from).getHand().size();
+			int cardIndex = (1 + (int)(Math.random() * 100)) % players.get(from).getHand().size();
 
 			System.out.println("Player" + to + " draws a card from Player" + from
 			+ " " + players.get(from).getHand().get(cardIndex).cardToString());
@@ -119,18 +122,78 @@ public class PlayGame {
 				}
 				System.out.println("Player" + to + " and Player" + from + " win");
 				IS_OVER = true;
+				NUM_OF_PLAYERS -= 2;
+
+				players.remove(to);
+				players.remove(from);
+				players.trimToSize();
+			} else {
+				if(players.get(from).getHand().size() == 0) {
+					System.out.println("Player" + from + " wins");
+					IS_OVER = true;
+					NUM_OF_PLAYERS--;
+					players.remove(from);
+					players.trimToSize();
+				} else if(players.get(to).getHand().size() == 0) {
+					System.out.println("Player" + to + " wins");
+					IS_OVER = true;
+					NUM_OF_PLAYERS--;
+					players.remove(to);
+					players.trimToSize();
+				}
 			}
-			if(players.get(from).getHand().size() == 0) {
-				System.out.println("Player" + from + " wins");
-				IS_OVER = true;
-			} else if(players.get(to).getHand().size() == 0) {
-				System.out.println("Player" + to + " wins");
-				IS_OVER = true;
-			}
-			
+
 			i++;
 		}
 		System.out.println("Basic game over");
+		System.out.println("Continue");
+
+		IS_OVER = false;
+		while(!IS_OVER) {
+
+			int to = i % NUM_OF_PLAYERS;
+			int from = (i + 1) % NUM_OF_PLAYERS;
+			int toIndex = players.get(to).getIndex();
+			int fromIndex = players.get(from).getIndex();
+
+			int cardIndex = (1 + (int)(Math.random() * 100)) % players.get(from).getHand().size();
+
+			System.out.println("Player" + toIndex + " draws a card from Player" + fromIndex
+			+ " " + players.get(from).getHand().get(cardIndex).cardToString());
+
+			drawing(players.get(to), players.get(from), cardIndex);
+			drawCardsOutput(players, to, from);
+
+			if(players.get(to).getHand().size() == 0 && players.get(from).getHand().size() == 0) {
+				if(to > from) {
+					int tmp = to;
+					to = from;
+					from = to;
+				}
+				System.out.println("Player" + toIndex + " and Player" + from + " win");
+				NUM_OF_PLAYERS -= 2;
+				players.remove(to);
+				players.remove(from);
+				players.trimToSize();
+			} else {
+				if(players.get(from).getHand().size() == 0) {
+					System.out.println("Player" + fromIndex + " wins");
+					NUM_OF_PLAYERS--;
+					players.remove(from);
+					players.trimToSize();
+				} else if(players.get(to).getHand().size() == 0) {
+					System.out.println("Player" + toIndex + " wins");
+					NUM_OF_PLAYERS--;
+					players.remove(to);
+					players.trimToSize();
+				}
+			}
+			if(NUM_OF_PLAYERS == 1) {
+				IS_OVER = true;
+			}
+			i++;
+		}
+		System.out.println("Bonus game over");
 
 	}
 }

@@ -4,8 +4,9 @@ import java.util.Collections;
 
 public class Player {
 
-	public Player() {
+	public Player(int i) {
 		hand = new ArrayList<BaseCard>();
+		pIndex = i;
 	}
 	public void sortHand() {
 		Collections.sort(hand, BaseCard.CardComparator);
@@ -18,7 +19,7 @@ public class Player {
 
 			if(hand.get(i).getRank() == hand.get(i - 1).getRank()) {
 
-				if(!(hand.get(i).getRank().ordinal() == 13)) { //is not both are jokers
+				if(!(hand.get(i).getRank() == Ranks.JOKER)) { //are not both jokers
 					hand.remove(i);
 					hand.remove(i - 1);
 					hand.trimToSize();
@@ -34,6 +35,11 @@ public class Player {
 	public void addCard(BaseCard _baseCard) {
 		hand.add(_baseCard);
 	}
+	public int getIndex() {
+		return pIndex;
+	}
 	private ArrayList<BaseCard> hand;
 	public ArrayList<BaseCard> getHand() { return hand; };
+
+	private int pIndex;
 }
