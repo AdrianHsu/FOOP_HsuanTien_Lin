@@ -2,9 +2,15 @@ import java.util.Comparator;
 
 public class BaseCard {
 	
+	// Constructor
 	public BaseCard(Ranks _rank, Suits _suit) {
 		this.rank = _rank;
 		this.suit = _suit;	
+	}
+	// Copy Constructor
+	public BaseCard(BaseCard _baseCard) {
+		this.rank = _baseCard.getRank();
+		this.suit = _baseCard.getSuit();
 	}
 
 	public static Comparator<BaseCard> CardComparator = new Comparator<BaseCard>() {
