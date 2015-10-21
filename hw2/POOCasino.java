@@ -22,7 +22,7 @@ public class POOCasino {
 		// CASE1: ROYAL_FLUSH
 		Boolean result = true;
 		int rankTotal = 0;
-		int _suit = 0;
+		int _suit = -1;
 
 		for(int i = 0; i < 5; i ++) {
 			rankTotal += rank[ i ];
@@ -44,34 +44,28 @@ public class POOCasino {
 
 		// CASE2: STRAIGHT_FLUSH
 		result = true;
-		rankTotal = 0;
-		_suit = 0;
+		// rankTotal = 0;
+		_suit = suit[0];
 
 		for(int i = 1; i < 5; i ++) {
 			if( rank[ i ] - 1 != rank[ i - 1 ]) {
 				result = false;
 				break;
 			}
-			if(i == 1) {
-				_suit = suit[ i ];
-			}
-			else {
-				// 5 same unit
-				if(_suit != suit[ i ]) {
-					result = false;
-					break;
-				}
+			if(_suit != suit[ i ]) {
+				result = false;
+				break;
 			}
 		}
-		if(result && _suit == suit[0] ) {
+		if(result) {
 			return HandTypes.STRAIGHT_FLUSH;
 		}
 
 		// CASE3: FOUR_OF_A_KIND
 		result = true;
 		Boolean result2 = true;
-		rankTotal = 0;
-		_suit = 0;
+		// rankTotal = 0;
+		_suit = -1;
 
 		for(int i = 1; i < 4; i++) {
 			// CASE: 3,3,3,3,5
@@ -89,8 +83,8 @@ public class POOCasino {
 		// CASE4: FULL_HOUSE
 		result = true;
 		result2 = true;
-		rankTotal = 0;
-		_suit = 0;
+		// rankTotal = 0;
+		_suit = -1;
 
 		if(rank[0] == rank[1] && rank[1] == rank[2] && rank[3] == rank[4]
 		|| rank[0] == rank[1] && rank[2] == rank[3] && rank[3] == rank[4]) {
@@ -98,10 +92,71 @@ public class POOCasino {
 		}
 
 		// CASE5: FLUSH
+		result = true;
+		result2 = true;
+		// rankTotal = 0;
+		_suit = suit[0];
+
+		for(int i = 0; i < 5; i++) {
+			if(_suit != suit[ i ]) {
+				result = false;
+				break;
+			}
+		}
+		if(result) {
+			return HandTypes.FLUSH;
+		}
 		// CASE6: STRAIGHT
+		result = true;
+		result2 = true;
+		// rankTotal = 0;
+		_suit = -1;
+
+		for(int i = 1; i < 5; i ++) {
+			if( rank[ i ] - 1 != rank[ i - 1 ]) {
+				result = false;
+				break;
+			}
+		}
+		if(result) {
+			return HandTypes.STRAIGHT;
+		}
 		// CASE7: THREE_OF_A_KIND
+		result = true;
+		result2 = true;
+		// rankTotal = 0;
+		_suit = -1;
+
+		if(rank[0] == rank[1] && rank[1] == rank[2]
+		|| rank[1] == rank[2] && rank[2] == rank[3]
+		|| rank[2] == rank[3] && rank[3] == rank[4]) {
+			return HandTypes.THREE_OF_A_KIND;
+		}
 		// CASE8: TWO_PAIR
+		result = true;
+		result2 = true;
+		// rankTotal = 0;
+		_suit = -1;
+		// CASE: 2,2,4,4,6
+		// CASE: 2,2,4,6,6
+		// CASE: 2,4,4,6,6
+		if(rank[0] == rank[1] && rank[2] == rank[3]
+		|| rank[0] == rank[1] && rank[3] == rank[4]
+		|| rank[1] == rank[2] && rank[3] == rank[4]) {
+			return HandTypes.TWO_PAIR;
+		}
 		// CASE9: JACKS_OR_BETTER
+		result = true;
+		result2 = true;
+		// rankTotal = 0;
+		_suit = -1;
+
+		for(int i = 1; i < 5; i ++) {
+			// 9 <= J, Q, K, A
+			if(rank[i] == rank[i - 1] && 9 <= rank[i]) {
+				return HandTypes.JACKS_OR_BETTER;
+			}
+		}
 		// CASE10: OTHERS
 		return HandTypes.OTHERS;
 	}

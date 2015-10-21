@@ -30,7 +30,7 @@ public class Computer {
 	}
 	public void quitGame(String _playerName, int _dollars, int _round) {
 		System.out.println("Good bye, " + _playerName + ". You played for " + 
-				(_round - 1) + " round and have " + _dollars + " P-dollars now.");
+				(_round - 1) + " round(s) and have " + _dollars + " P-dollars now.");
 	}
 	public void initHand(ArrayList<Card> _hand) {
 		
