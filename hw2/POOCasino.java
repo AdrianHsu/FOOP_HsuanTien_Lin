@@ -66,6 +66,43 @@ public class POOCasino {
 		if(result && _suit == suit[0] ) {
 			return HandTypes.STRAIGHT_FLUSH;
 		}
+
+		// CASE3: FOUR_OF_A_KIND
+		result = true;
+		Boolean result2 = true;
+		rankTotal = 0;
+		_suit = 0;
+
+		for(int i = 1; i < 4; i++) {
+			// CASE: 3,3,3,3,5
+			if(rank[ i ] != rank[ i - 1 ]) {
+				result = false;
+			}
+			// CASE: 2,3,3,3,3
+			if(rank[ i + 1 ] != rank [ i ]) {
+				result2 = false;
+			}
+		}
+		if(result || result2) {
+			return HandTypes.FOUR_OF_A_KIND;
+		}
+		// CASE4: FULL_HOUSE
+		result = true;
+		result2 = true;
+		rankTotal = 0;
+		_suit = 0;
+
+		if(rank[0] == rank[1] && rank[1] == rank[2] && rank[3] == rank[4]
+		|| rank[0] == rank[1] && rank[2] == rank[3] && rank[3] == rank[4]) {
+			return HandTypes.FOUR_OF_A_KIND;
+		}
+
+		// CASE5: FLUSH
+		// CASE6: STRAIGHT
+		// CASE7: THREE_OF_A_KIND
+		// CASE8: TWO_PAIR
+		// CASE9: JACKS_OR_BETTER
+		// CASE10: OTHERS
 		return HandTypes.OTHERS;
 	}
 

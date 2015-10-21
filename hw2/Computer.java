@@ -58,19 +58,20 @@ public class Computer {
 		System.out.print("Which cards do you want to keep? ");
 		keep = scanner.next();
 
-		if(keep.contentEquals("abcde")) {
-			System.out.println("Okay. I will discard nothing.");
-			return;
-		}
-		Boolean [] discard = {false, false, false, false, false};
+		Boolean [] discard = {true, true, true, true, true};
 
 		if (keep.contentEquals("none")) {
-			for(int i = 0; i < 5; i++) {
-				discard[ i ] = true;
-			}			
+			// for(int i = 0; i < 5; i++) {
+			// 	discard[ i ] = true;
+			// }			
 		} else {
-			for(int i = 0; i < keep.length(); i++) {
-				discard[ (int)(keep.charAt(i)) - 97 ] = true;
+			if(keep.length() == 5) {
+				System.out.println("Okay. I will discard nothing");
+				return;
+			} else {
+				for(int i = 0; i < keep.length(); i++) {
+					discard[ (int)(keep.charAt(i)) - 97 ] = false;
+				}
 			}
 		}
 

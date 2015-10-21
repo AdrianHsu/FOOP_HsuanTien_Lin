@@ -21,15 +21,15 @@ public class Shuffler {
 				Card _card = new Card( Ranks.values()[0] , Suits.values()[0] );
 				totalCards.add( _card );
 		}
-		Card card1 = new Card( Ranks.values()[4] , Suits.values()[3] );
+		Card card1 = new Card( Ranks.values()[0] , Suits.values()[2] );
 		totalCards.add( card1 );
-		Card card2 = new Card( Ranks.values()[3] , Suits.values()[3] );
+		Card card2 = new Card( Ranks.values()[0] , Suits.values()[3] );
 		totalCards.add( card2 );
-		Card card3 = new Card( Ranks.values()[2] , Suits.values()[3] );
+		Card card3 = new Card( Ranks.values()[0] , Suits.values()[1] );
 		totalCards.add( card3 );
-		Card card4 = new Card( Ranks.values()[1] , Suits.values()[3] );
+		Card card4 = new Card( Ranks.values()[3] , Suits.values()[2] );
 		totalCards.add( card4 );
-		Card card5 = new Card( Ranks.values()[0] , Suits.values()[3] );
+		Card card5 = new Card( Ranks.values()[3] , Suits.values()[3] );
 		totalCards.add( card5 );
 		// for(int i = 0; i < 13; i++) {
 		// 	for(int j = 0; j < 4; j++) {
