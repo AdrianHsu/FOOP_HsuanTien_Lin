@@ -4,10 +4,9 @@ public class Shuffler {
 	
 	Shuffler(int _N, ArrayList<Card> totalCards) {
 		
-		if(totalCards.size() > 0) {
-			totalCards.clear();
-		}
-
+		// if(totalCards.size() > 0) {
+		// 	totalCards.clear();
+		// }
 		mRI.setSize(_N);
 
 		for(int i = 0; i < _N; i ++) {
@@ -37,6 +36,20 @@ public class Shuffler {
 		// 		totalCards.add( _card );
 		// 	}
 		// }
+	}
+	public void reShuffle(int _N, ArrayList<Card> totalCards) {
+		if(totalCards.size() > 0) {
+			totalCards.clear();
+		}
+
+		mRI.setSize(_N);
+
+		for(int i = 0; i < _N; i ++) {
+			int index = mRI.getNext();
+			Card _card = new Card( Ranks.values()[ index % 13 ],
+								   Suits.values()[ index %  4 ] );
+			totalCards.add( _card );
+		}
 	}
 
 	private RandomIndex mRI = new RandomIndex();

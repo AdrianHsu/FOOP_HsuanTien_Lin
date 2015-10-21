@@ -6,101 +6,39 @@ public class Computer {
 	
 	public Computer(String _author) {
 		author = _author;
-	}
-
-	public void init(Player _player) {
-
 		System.out.println("POOCasino Jacks or better, written by " + author);
-		Scanner scanner = new Scanner(System.in);
-		System.out.print("Please enter your name: ");
-		_player.setName( scanner.next() );
-		System.out.println("Welcome, " +  _player.getName() + ".");
-		_player.addDollars(1000);
-		System.out.println("You have 1000 P-dollars now.");
 	}
-	public int enterBet(int _round) {
-		System.out.print("Please enter your P-dollar bet for round " + _round + " (1-5 or 0 for quitting the game): ");
-		Scanner scanner = new Scanner(System.in);
-		int _bet = scanner.nextInt();
-		// DEBUG:
-		// int _bet = 5;
 
-		if(_bet > 5 || _bet < 0) {
-			// THROW EXCEPTION
-		} 
-		return _bet;
+	public void shuffle() {
+		if(mShuffler == null) {
+			mShuffler = new Shuffler(POOCasino.NUM_TOTAL_CARDS, totalCards);
+		} else {
+			mShuffler.reShuffle(POOCasino.NUM_TOTAL_CARDS, totalCards);
+		}
 	}
-	public void quitGame(String _playerName, int _dollars, int _round) {
-		System.out.println("Good bye, " + _playerName + ". You played for " + 
-				(_round - 1) + " round(s) and have " + _dollars + " P-dollars now.");
-	}
-	public void initHand(ArrayList<Card> _hand) {
+	public void distributeCards(Player mPlayer) {
 		
-		if(!_hand.isEmpty()) {
-			_hand.clear();
+		if(!mPlayer.hand.isEmpty()) {
+			mPlayer.hand.clear();
 		}
 
 		System.out.print("Your cards are");
 		for(int i = 0; i < 5; i++) {
-			_hand.add(totalCards.remove(totalCards.size() - 1));
+			mPlayer.hand.add(totalCards.remove(totalCards.size() - 1));
 			totalCards.trimToSize();
 		}
 
-		// Collections.sort(_hand, Card.CardComparator);
+		// Collections.sort(hand, Card.CardComparator);
 
 		for(int i = 0; i < 5; i++) {
-			System.out.print(" (" + (char)(i + 97) + ") " + _hand.get(i).cardToString());
+			System.out.print(" (" + (char)(i + 97) + ") " + mPlayer.hand.get(i).cardToString());
 		}
 		System.out.println("");
 		
 	}
-	public void keepHand(ArrayList<Card> _hand) {
-		Scanner scanner = new Scanner(System.in);
-		String keep = "";
-		System.out.print("Which cards do you want to keep? ");
-		keep = scanner.next();
-		// // DEBUG:
-		// keep = "edcba";
-
-		Boolean [] discard = {true, true, true, true, true};
-
-		if (keep.contentEquals("none")) {
-			// for(int i = 0; i < 5; i++) {
-			// 	discard[ i ] = true;
-			// }			
-		} else {
-			if(keep.length() == 5) {
-				System.out.println("Okay. I will discard nothing");
-				return;
-			} else {
-				for(int i = 0; i < keep.length(); i++) {
-					discard[ (int)(keep.charAt(i)) - 97 ] = false;
-				}
-			}
-		}
-
-		System.out.print("Okay. I will discard ");
-		for(int i = 0; i < 5; i++) {
-			if(discard[i] == true) {
-				System.out.print(" (" + (char)(i + 97) + ") " + _hand.get( i ).cardToString());
-			}
-		}
-		System.out.println(".");
-		System.out.print("Your new cards are");
-		for(int i = 0; i < 5; i++) {
-			if(discard[ i ] == true) {
-				_hand.set(i, totalCards.remove(totalCards.size() - 1));
-				totalCards.trimToSize();
-			}
-			System.out.print(" " + _hand.get( i ).cardToString());
-
-		}
-		System.out.println(".");
-		// Collections.sort(_hand, Card.CardComparator);
-	}
-	public void payoffHand(Player mPlayer) {
+	public void payoff(Player mPlayer) {
 		
-		int i = POOCasino.determineHand(mPlayer.hand).ordinal();
+		int i = determineHand(mPlayer.hand).ordinal();
 		int payoff = (POOCasino.payoffTable[i] * mPlayer.getBet());
 		if(i == 9 && mPlayer.getBet() == 5) {
 			mPlayer.addDollars(4000 - 5); //special case
@@ -112,7 +50,162 @@ public class Computer {
 				 ". The payoff is " + payoff + ".");
 		}
 	}
+	public static HandTypes determineHand(ArrayList<Card> _hand) {
 
+		Collections.sort(_hand, Card.CardComparator);
+
+		int [] rank = {0, 0, 0, 0, 0}; // init with arbitrary values
+		int [] suit = {0, 0, 0, 0, 0};
+		for(int i = 0; i < 5; i++) {
+			rank[ i ] = _hand.get(i).getRank().ordinal();
+			suit[ i ] = _hand.get(i).getSuit().ordinal();
+		}
+		// CASE1: ROYAL_FLUSH
+		Boolean result = true;
+		int rankTotal = 0;
+		int _suit = -1;
+
+		for(int i = 0; i < 5; i ++) {
+			rankTotal += rank[ i ];
+			if(i == 0) {
+				_suit = suit[ i ];
+			}
+			else {
+				// 5 same unit
+				if(_suit != suit[ i ]) {
+					result = false;
+					break;
+				}
+			}
+		}
+		// 12 + 11 + 10 + 9 + 8 = 50
+		if(rankTotal == 50 && result) {
+			return HandTypes.ROYAL_FLUSH;
+		}
+
+		// CASE2: STRAIGHT_FLUSH
+		result = true;
+		// rankTotal = 0;
+		_suit = suit[0];
+
+		for(int i = 1; i < 5; i ++) {
+			if( rank[ i ] - 1 != rank[ i - 1 ]) {
+				result = false;
+				break;
+			}
+			if(_suit != suit[ i ]) {
+				result = false;
+				break;
+			}
+		}
+		if(result) {
+			return HandTypes.STRAIGHT_FLUSH;
+		}
+
+		// CASE3: FOUR_OF_A_KIND
+		result = true;
+		Boolean result2 = true;
+		// rankTotal = 0;
+		_suit = -1;
+
+		for(int i = 1; i < 4; i++) {
+			// CASE: 3,3,3,3,5
+			if(rank[ i ] != rank[ i - 1 ]) {
+				result = false;
+			}
+			// CASE: 2,3,3,3,3
+			if(rank[ i + 1 ] != rank [ i ]) {
+				result2 = false;
+			}
+		}
+		if(result || result2) {
+			return HandTypes.FOUR_OF_A_KIND;
+		}
+		// CASE4: FULL_HOUSE
+		result = true;
+		result2 = true;
+		// rankTotal = 0;
+		_suit = -1;
+
+		if(rank[0] == rank[1] && rank[1] == rank[2] && rank[3] == rank[4]
+		|| rank[0] == rank[1] && rank[2] == rank[3] && rank[3] == rank[4]) {
+			return HandTypes.FOUR_OF_A_KIND;
+		}
+
+		// CASE5: FLUSH
+		result = true;
+		result2 = true;
+		// rankTotal = 0;
+		_suit = suit[0];
+
+		for(int i = 0; i < 5; i++) {
+			if(_suit != suit[ i ]) {
+				result = false;
+				break;
+			}
+		}
+		if(result) {
+			return HandTypes.FLUSH;
+		}
+		// CASE6: STRAIGHT
+		result = true;
+		result2 = true;
+		// rankTotal = 0;
+		_suit = -1;
+
+		for(int i = 1; i < 5; i ++) {
+			if( rank[ i ] - 1 != rank[ i - 1 ]) {
+				result = false;
+				break;
+			}
+		}
+		if(result) {
+			return HandTypes.STRAIGHT;
+		}
+		// CASE7: THREE_OF_A_KIND
+		result = true;
+		result2 = true;
+		// rankTotal = 0;
+		_suit = -1;
+
+		if(rank[0] == rank[1] && rank[1] == rank[2]
+		|| rank[1] == rank[2] && rank[2] == rank[3]
+		|| rank[2] == rank[3] && rank[3] == rank[4]) {
+			return HandTypes.THREE_OF_A_KIND;
+		}
+		// CASE8: TWO_PAIR
+		result = true;
+		result2 = true;
+		// rankTotal = 0;
+		_suit = -1;
+		// CASE: 2,2,4,4,6
+		// CASE: 2,2,4,6,6
+		// CASE: 2,4,4,6,6
+		if(rank[0] == rank[1] && rank[2] == rank[3]
+		|| rank[0] == rank[1] && rank[3] == rank[4]
+		|| rank[1] == rank[2] && rank[3] == rank[4]) {
+			return HandTypes.TWO_PAIR;
+		}
+		// CASE9: JACKS_OR_BETTER
+		result = true;
+		result2 = true;
+		// rankTotal = 0;
+		_suit = -1;
+
+		for(int i = 1; i < 5; i ++) {
+			// 9 <= J, Q, K, A
+			if(rank[i] == rank[i - 1] && 9 <= rank[i]) {
+				return HandTypes.JACKS_OR_BETTER;
+			}
+		}
+		// CASE10: OTHERS
+		return HandTypes.OTHERS;
+	}
+	public void quitGame(String _playerName, int _dollars, int _round) {
+		System.out.println("Good bye, " + _playerName + ". You played for " + 
+				(_round - 1) + " round(s) and have " + _dollars + " P-dollars now.");
+	}
+	private static Shuffler mShuffler;
 	public static ArrayList<Card> totalCards = new ArrayList<Card>();
 	private	static String author;
 }
