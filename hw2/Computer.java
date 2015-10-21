@@ -95,40 +95,17 @@ public class Computer {
 	}
 	public void payoffHand(Player mPlayer) {
 		
-		int i = determineHand(mPlayer.hand).ordinal();
+		int i = POOCasino.determineHand(mPlayer.hand).ordinal();
 		int payoff = (POOCasino.payoffTable[i] * mPlayer.getBet());
-		System.out.println("You get a " + POOCasino.sHandType[i] + 
-						 ". The payoff is " + payoff + ".");
-		mPlayer.addDollars(payoff - mPlayer.getBet());
-	}
-	public HandTypes determineHand(ArrayList<Card> _hand) {
-
-		Collections.sort(_hand, Card.CardComparator);
-
-		Boolean result = true;
-		int rankTotal = 0;
-		Suits suit = Suits.CLUBS; //init
-
-		for(int i = 0; i < 5; i ++) {
-			rankTotal += _hand.get(i).getRank().ordinal();
-			if(i == 0) {
-				suit = _hand.get(i).getSuit();
-			}
-			else {
-				// 5 same unit
-				if(suit != _hand.get(i).getSuit()) {
-					result = false;
-					break;
-				}
-			}
+		if(i == 9 && mPlayer.getBet() == 5) {
+			mPlayer.addDollars(4000 - 5); //special case
+			System.out.println("You get a " + POOCasino.sHandType[i] + 
+				 ". The payoff is " + 4000 + ".");
+		} else {
+			mPlayer.addDollars(payoff - mPlayer.getBet());
+			System.out.println("You get a " + POOCasino.sHandType[i] + 
+				 ". The payoff is " + payoff + ".");
 		}
-		// 12 + 11 + 10 + 9 + 8 = 50
-		if(rankTotal == 50 && result) {
-			return HandTypes.ROYAL_FLUSH;
-		}
-
-
-		return HandTypes.OTHERS;
 	}
 
 	public static ArrayList<Card> totalCards = new ArrayList<Card>();
