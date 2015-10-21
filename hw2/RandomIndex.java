@@ -11,7 +11,7 @@ public class RandomIndex{
 			permuteIndex();
 		}
 	}
-	
+
 	public void initializeIndex(){
 		for(int i=0;i<index.length;i++)
 			index[i] = i;
