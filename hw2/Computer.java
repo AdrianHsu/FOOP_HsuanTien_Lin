@@ -15,7 +15,7 @@ public class Computer {
 		System.out.print("Please enter your name: ");
 		_player.setName( scanner.next() );
 		System.out.println("Welcome, " +  _player.getName() + ".");
-		_player.setDollars(1000);
+		_player.addDollars(1000);
 		System.out.println("You have 1000 P-dollars now.");
 	}
 	public int enterBet(int _round) {
@@ -30,34 +30,48 @@ public class Computer {
 	}
 	public void quitGame(String _playerName, int _dollars, int _round) {
 		System.out.println("Good bye, " + _playerName + ". You played for " + 
-				_round + " round and have " + _dollars + " P-dollars now.");
+				(_round - 1) + " round and have " + _dollars + " P-dollars now.");
 	}
 	public void initHand(ArrayList<Card> _hand) {
 		
-		if(_hand.isEmpty()) {
-		
-			System.out.print("Your cards are");
-			for(int i = 0; i < 5; i++) {
-				_hand.add(totalCards.remove(totalCards.size() - 1));
-				totalCards.trimToSize();
-			}
-
-			// Collections.sort(_hand, Card.CardComparator);
-
-			for(int i = 0; i < 5; i++) {
-				System.out.print(" (" + (char)(i + 97) + ") " + _hand.get(i).cardToString());
-			}
-			System.out.println("");
+		if(!_hand.isEmpty()) {
+			_hand.clear();
 		}
+
+		System.out.print("Your cards are");
+		for(int i = 0; i < 5; i++) {
+			_hand.add(totalCards.remove(totalCards.size() - 1));
+			totalCards.trimToSize();
+		}
+
+		// Collections.sort(_hand, Card.CardComparator);
+
+		for(int i = 0; i < 5; i++) {
+			System.out.print(" (" + (char)(i + 97) + ") " + _hand.get(i).cardToString());
+		}
+		System.out.println("");
+		
 	}
 	public void keepHand(ArrayList<Card> _hand) {
 		Scanner scanner = new Scanner(System.in);
 		String keep = "";
 		System.out.print("Which cards do you want to keep? ");
 		keep = scanner.next();
+
+		if(keep.contentEquals("abcde")) {
+			System.out.println("Okay. I will discard nothing.");
+			return;
+		}
 		Boolean [] discard = {false, false, false, false, false};
-		for(int i = 0; i < keep.length(); i++) {
-			discard[ (int)(keep.charAt(i)) - 97 ] = true;
+
+		if (keep.contentEquals("none")) {
+			for(int i = 0; i < 5; i++) {
+				discard[ i ] = true;
+			}			
+		} else {
+			for(int i = 0; i < keep.length(); i++) {
+				discard[ (int)(keep.charAt(i)) - 97 ] = true;
+			}
 		}
 
 		System.out.print("Okay. I will discard ");
@@ -79,6 +93,44 @@ public class Computer {
 		System.out.println(".");
 		// Collections.sort(_hand, Card.CardComparator);
 	}
+	public void payoffHand(Player mPlayer) {
+		
+		int i = determineHand(mPlayer.hand).ordinal();
+		int payoff = (POOCasino.payoffTable[i] * mPlayer.getBet());
+		System.out.println("You get a " + POOCasino.sHandType[i] + 
+						 ". The payoff is " + payoff + ".");
+		mPlayer.addDollars(payoff - mPlayer.getBet());
+	}
+	public HandTypes determineHand(ArrayList<Card> _hand) {
+
+		Collections.sort(_hand, Card.CardComparator);
+
+		Boolean result = true;
+		int rankTotal = 0;
+		Suits suit = Suits.CLUBS; //init
+
+		for(int i = 0; i < 5; i ++) {
+			rankTotal += _hand.get(i).getRank().ordinal();
+			if(i == 0) {
+				suit = _hand.get(i).getSuit();
+			}
+			else {
+				// 5 same unit
+				if(suit != _hand.get(i).getSuit()) {
+					result = false;
+					break;
+				}
+			}
+		}
+		// 12 + 11 + 10 + 9 + 8 = 50
+		if(rankTotal == 50 && result) {
+			return HandTypes.ROYAL_FLUSH;
+		}
+
+
+		return HandTypes.OTHERS;
+	}
+
 	public static ArrayList<Card> totalCards = new ArrayList<Card>();
 	private	static String author;
 }
