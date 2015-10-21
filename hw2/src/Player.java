@@ -4,14 +4,14 @@ import java.util.Collections;
 
 public class Player {
 
-	public Player() {
+	public Player(int _dollars) {
 		
 		Scanner scanner = new Scanner(System.in);
 		System.out.print("Please enter your name: ");
 		setName( scanner.next() );
 		System.out.println("Welcome, " +  getName() + ".");
-		addDollars(1000);
-		System.out.println("You have 1000 P-dollars now.");
+		addDollars(_dollars);
+		System.out.println("You have " + dollars + " P-dollars now.");
 		bet = -1; //default
 	}
 

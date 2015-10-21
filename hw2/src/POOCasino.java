@@ -3,7 +3,10 @@ import java.util.Collections;
 
 public class POOCasino {
 
+	static final String AUTHOR = "b03901023 Pin-Chun Hsu";
 	static final int NUM_TOTAL_CARDS = 52;
+	static final int DOLLARS_GIVEN = 1000;
+
 	static final int [] payoffTable = {0, 1, 2, 3, 4, 6, 9, 25, 50, 250};
 	static final String[] sHandType = { "others", "Jacks or better", "two pair", "three of a kind",
 										"straight", "flush", "full house", "four of a kind", 
@@ -11,9 +14,8 @@ public class POOCasino {
 
 	public static void main( String [] args ) {
 
-		final String author = "b03901023 Pin-Chun Hsu";
-		Computer mComputer = new Computer(author);
-		Player mPlayer = new Player();
+		Computer mComputer = new Computer(AUTHOR);
+		Player mPlayer = new Player(DOLLARS_GIVEN);
 		int round = 1;
 
 		// DEBUG: To ensure that shuffler works well in totalCards
