@@ -2,15 +2,15 @@ import java.util.ArrayList;
 
 public class Shuffler {
 	
-	Shuffler(int _size, ArrayList<Card> totalCards) {
+	Shuffler(int _N, ArrayList<Card> totalCards) {
 		
 		if(totalCards.size() > 0) {
 			totalCards.clear();
 		}
 
-		mRI.setSize(_size);
+		mRI.setSize(_N);
 
-		for(int i = 0; i < _size; i ++) {
+		for(int i = 0; i < _N; i ++) {
 			int index = mRI.getNext();
 			Card _card = new Card( Ranks.values()[ index % 13 ],
 								   Suits.values()[ index %  4 ] );

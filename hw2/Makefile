@@ -1,9 +1,11 @@
-JAVAFLAGS = -g 
+JAVAFLAGS = -g -d .
 
-all: hw1
+all: hw2
 
 clean:
 	rm -f *.class
 
-hw1: *.java
-	javac $(JAVAFLAGS) *java
+hw2:
+	javac $(JAVAFLAGS) src/*java
+run:
+	java POOCasino

@@ -22,6 +22,8 @@ public class Computer {
 		System.out.print("Please enter your P-dollar bet for round " + _round + " (1-5 or 0 for quitting the game): ");
 		Scanner scanner = new Scanner(System.in);
 		int _bet = scanner.nextInt();
+		// DEBUG:
+		// int _bet = 5;
 
 		if(_bet > 5 || _bet < 0) {
 			// THROW EXCEPTION
@@ -57,6 +59,8 @@ public class Computer {
 		String keep = "";
 		System.out.print("Which cards do you want to keep? ");
 		keep = scanner.next();
+		// // DEBUG:
+		// keep = "edcba";
 
 		Boolean [] discard = {true, true, true, true, true};
 
@@ -100,11 +104,11 @@ public class Computer {
 		int payoff = (POOCasino.payoffTable[i] * mPlayer.getBet());
 		if(i == 9 && mPlayer.getBet() == 5) {
 			mPlayer.addDollars(4000 - 5); //special case
-			System.out.println("You get a " + POOCasino.sHandType[i] + 
+			System.out.println("You get a(n) " + POOCasino.sHandType[i] + 
 				 ". The payoff is " + 4000 + ".");
 		} else {
 			mPlayer.addDollars(payoff - mPlayer.getBet());
-			System.out.println("You get a " + POOCasino.sHandType[i] + 
+			System.out.println("You get a(n) " + POOCasino.sHandType[i] + 
 				 ". The payoff is " + payoff + ".");
 		}
 	}
