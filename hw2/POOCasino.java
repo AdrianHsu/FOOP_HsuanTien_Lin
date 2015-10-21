@@ -1,14 +1,11 @@
-import java.util.Scanner;
-
 public class POOCasino {
 
 	public static void main( String [] args ) {
-		System.out.println("POOCasino");
-		scan();
-	}
-	public static void scan() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Please input your name: ");
-        System.out.printf("\nHello! %d!\n", scanner.nextInt());
+
+		Computer mComputer = new Computer();
+		mComputer.setAuthor("b03901023 Pin-Chun Hsu");
+		String playerName = "";
+		mComputer.init(playerName);
+		Player mPlayer = new Player(playerName, 1000);
 	}
 }
