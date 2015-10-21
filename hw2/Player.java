@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Player {
 
 	public Player(String _name, int _dollars) {
@@ -15,6 +17,7 @@ public class Player {
 	public int getDollars() {return dollars; }
 	public void setDollars(int _dollars) { dollars = _dollars; }
 
+	public static ArrayList<Card> hand = new ArrayList<Card>();
 	private String name;
 	private int dollars;
 	

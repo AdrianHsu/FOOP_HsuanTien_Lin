@@ -10,13 +10,19 @@ public class POOCasino {
 		mComputer.init(mPlayer);
 
 		int round = 1;
+		int bet = 0;
+
+
 		while( true ) {
 
-			int bet = mComputer.enterBet(round);
+			bet = mComputer.enterBet(round);
 			if(bet == 0) {
 				mComputer.quitGame(mPlayer.getName(), mPlayer.getDollars(), round);
 				break;
 			}
+
+			mComputer.initHand(mPlayer.hand);
+			mComputer.keepHand(mPlayer.hand);
 
 			round++;
 		}
