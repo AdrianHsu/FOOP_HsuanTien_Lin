@@ -33,6 +33,6 @@ public class Card {
 	public static final String[] sSuits = {"C", "D", "H", "S"};
 	public static final String[] sRanks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
 
-	protected final Suits suit;
-	protected final Ranks rank;
+	private final Suits suit;
+	private final Ranks rank;
 }

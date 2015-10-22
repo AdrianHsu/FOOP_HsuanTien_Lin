@@ -52,7 +52,7 @@ public class Player {
 			}
 		}
 
-		System.out.print("Okay. I will discard ");
+		System.out.print("Okay. I will discard");
 		for(int i = 0; i < 5; i++) {
 			if(discard[i] == true) {
 				System.out.print(" (" + (char)(i + 97) + ") " + hand.get( i ).cardToString());

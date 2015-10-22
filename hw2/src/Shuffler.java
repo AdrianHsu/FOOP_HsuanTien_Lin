@@ -15,7 +15,7 @@ public class Shuffler {
 								   Suits.values()[ index %  4 ] );
 			totalCards.add( _card );
 		}
-		// DEBUG: non-shuffle totalCards, to ensure that 10 kinds of payoffs are corrent
+		// DEBUG: non-shuffle totalCards, to ensure that 10 kinds of payoffs are correct
 		// for(int i = 0; i < 47; i++) {
 		// 		Card _card = new Card( Ranks.values()[0] , Suits.values()[0] );
 		// 		totalCards.add( _card );

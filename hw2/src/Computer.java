@@ -36,9 +36,9 @@ public class Computer {
 		System.out.println("");
 		
 	}
-	public void payoff(Player mPlayer) {
-		
-		int i = determineHand(mPlayer.hand).ordinal();
+	public void payoff(Player mPlayer, HandTypes handTypes) {
+
+		int i = handTypes.ordinal();
 		int payoff = (POOCasino.payoffTable[i] * mPlayer.getBet());
 		if(i == 9 && mPlayer.getBet() == 5) {
 			mPlayer.addDollars(4000 - 5); //special case
@@ -50,7 +50,7 @@ public class Computer {
 				 ". The payoff is " + payoff + ".");
 		}
 	}
-	public static HandTypes determineHand(ArrayList<Card> _hand) {
+	public HandTypes determineHand(ArrayList<Card> _hand) {
 
 		Collections.sort(_hand, Card.CardComparator);
 
@@ -89,10 +89,16 @@ public class Computer {
 		_suit = suit[0];
 
 		for(int i = 1; i < 5; i ++) {
+			// determine STRAIGHT
+
+			// for case J, Q, K, A, 2
+			// to A, 2, 3, 4, 5 are not allowed, 
+			// thus we can only consider the following: 
 			if( rank[ i ] - 1 != rank[ i - 1 ]) {
 				result = false;
 				break;
 			}
+			// determine FLUSH
 			if(_suit != suit[ i ]) {
 				result = false;
 				break;
@@ -154,6 +160,10 @@ public class Computer {
 		_suit = -1;
 
 		for(int i = 1; i < 5; i ++) {
+
+			// for case J, Q, K, A, 2
+			// to A, 2, 3, 4, 5 are not allowed, 
+			// thus we can only consider the following: 
 			if( rank[ i ] - 1 != rank[ i - 1 ]) {
 				result = false;
 				break;

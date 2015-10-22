@@ -23,18 +23,26 @@ public class POOCasino {
 		// 	System.out.println(mComputer.totalCards.get(i).getRank().ordinal());
 		// 	System.out.println(mComputer.totalCards.get(i).getSuit().ordinal());
 		// }
-		while( true ) {
 
+		while( true ) {
+			
+			// The computer virtually opens a new deck of 52 cards, and shuffles it.
 			mComputer.shuffle();
+			// The player can choose to bet 1 to 5 P-dollars for the round.
 			mPlayer.enterBet(round);
+
 			if(mPlayer.getBet() == 0) {
 				mComputer.quitGame(mPlayer.getName(), mPlayer.getDollars(), round);
 				break;
 			}
-
+			// The computer distributes the player 5 cards from the shuffled deck.
 			mComputer.distributeCards(mPlayer);
+			// The player can choose to keep none, 1, 2, · · · , to 5 cards out of those 5 on hand. 
 			mPlayer.keepHand(mComputer);
-			mComputer.payoff(mPlayer);
+			// The computer then determines the best hand to describe the final 5 cards. 
+			HandTypes mHandType = mComputer.determineHand(mPlayer.hand);
+			// The computer then pays the user payoff P-dollars
+			mComputer.payoff(mPlayer, mHandType);
 
 			round++;
 		}
