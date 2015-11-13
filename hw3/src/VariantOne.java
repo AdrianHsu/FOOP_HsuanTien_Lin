@@ -15,7 +15,7 @@ public class VariantOne extends OldMaid {
 		}
 	}
 
-	public static void game(ArrayList<Player> players, int i) {
+	public static void baba_nuki(ArrayList<Player> players, int i) {
 		
 		int to = i % NUM_OF_PLAYERS;
 		int from = (i + 1) % NUM_OF_PLAYERS;
@@ -105,7 +105,7 @@ public class VariantOne extends OldMaid {
 
 		while(!IS_OVER) {
 
-			game(players, i);
+			baba_nuki(players, i);
 			if(NUM_OF_PLAYERS == 1) {
 				IS_OVER = true;
 			}

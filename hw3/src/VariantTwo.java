@@ -19,7 +19,7 @@ public class VariantTwo extends OldMaid {
 		}
 	}
 
-	public static void game(ArrayList<Player> players, int i) {
+	public static void jackass(ArrayList<Player> players, int i) {
 		
 		int to = i % NUM_OF_PLAYERS;
 		int from = (i + 1) % NUM_OF_PLAYERS;
@@ -108,7 +108,7 @@ public class VariantTwo extends OldMaid {
 
 		while(!IS_OVER) {
 
-			game(players, i);
+			jackass(players, i);
 			if(NUM_OF_PLAYERS == 1) {
 				IS_OVER = true;
 			}
