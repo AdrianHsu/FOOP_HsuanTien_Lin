@@ -61,6 +61,14 @@ public class VariantOne extends OldMaid {
 		DeckOfCards deckOfCards = new DeckOfCards();
 		deckOfCards.shuffle();
 
+		System.out.println("|==============================================================|");
+		System.out.println("|   @ OldMaid VariantOne Game - [baba-nuki]                    |");
+		System.out.println("|   @ Course: [CSIE1214] Fundamental OOP hw3                   |");
+		System.out.println("|   @ https://www.csie.ntu.edu.tw/~htlin/course/foop15fall/    |");
+		System.out.println("|   @ Instructor: Hsuan-Tien Lin                               |");
+		System.out.println("|   @ Student ID / Name: B03901023 / Pin-Chun Hsu              |");
+		System.out.println("|==============================================================|");
+
 		// init players
 		ArrayList<Player> players = new ArrayList<Player>();
 		for(int i = 0; i < NUM_OF_PLAYERS; i++) {
@@ -86,7 +94,11 @@ public class VariantOne extends OldMaid {
 		cardsOutput(players);
 
 		// Game start
-		System.out.println("VariantOne Game start");
+		System.out.println("*****************************************");
+		System.out.println("OldMaid VariantOne [baba-nuki] Game start");
+		System.out.println("Red Joker was included.");
+		System.out.println("*****************************************");
+
 
 		int i = 0;
 		Boolean IS_OVER = false;
@@ -99,7 +111,7 @@ public class VariantOne extends OldMaid {
 			}
 			i++;
 		}
-		System.out.println("OldMaid VariantOne Game Over");
+		System.out.println("OldMaid VariantOne [baba-nuki] Game Over");
 
 	}
 }
