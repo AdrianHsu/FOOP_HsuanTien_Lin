@@ -7,7 +7,5 @@ clean:
 
 hw3:
 	javac $(JAVAFLAGS) src/*java
-run1:
-	java VariantOne
-run2:
-	java VariantTwo
+run:
+	java Game

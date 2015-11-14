@@ -60,18 +60,10 @@ public class VariantTwo extends OldMaid {
 			}
 		}
 	}
-	public static void main(String [] args) {
+	public static void playGame() {
 
 		DeckOfCards deckOfCards = new DeckOfCards();
 		deckOfCards.shuffle();
-
-		System.out.println("|==============================================================|");
-		System.out.println("|   @ OldMaid VariantTwo Game - [Jackass]                      |");
-		System.out.println("|   @ Course: [CSIE1214] Fundamental OOP hw3                   |");
-		System.out.println("|   @ https://www.csie.ntu.edu.tw/~htlin/course/foop15fall/    |");
-		System.out.println("|   @ Instructor: Hsuan-Tien Lin                               |");
-		System.out.println("|   @ Student ID / Name: B03901023 / Pin-Chun Hsu              |");
-		System.out.println("|==============================================================|");
 
 		// init players
 		ArrayList<Player> players = new ArrayList<Player>();
