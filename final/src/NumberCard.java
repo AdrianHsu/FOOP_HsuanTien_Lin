@@ -6,5 +6,7 @@ public class NumberCard extends Card {
 		number = _number;
 	}
 
+	public int getNumber() {return number;}
+
 	private int number;
 }
