@@ -6,7 +6,8 @@ public abstract class Card {
 	}
 
 	public Colors getColor() {return color;}
+	public void setColor(Colors _color){color = _color;}
 	public int getScore() {return score;}
-	private final Colors color;
-	protected final int score;
+	private Colors color;
+	protected int score;
 }
