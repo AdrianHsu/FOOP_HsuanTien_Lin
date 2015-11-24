@@ -1,10 +1,10 @@
 public class ActionCard extends Card {
 
-	public ActionCard(Actions _action, Colors _color) {
-		
-		super(_color);
+	public ActionCard(Actions _action, Colors _color) {		
+		super(_color, 20);
 		action = _action;
 	}
 
-	private Actions action;
+	public Actions getAction() {return action;}
+	private final Actions action;
 }

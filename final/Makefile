@@ -8,4 +8,4 @@ clean:
 uno:
 	javac $(JAVAFLAGS) src/*java
 run:
-	java UNOGame
+	java PlayGame
