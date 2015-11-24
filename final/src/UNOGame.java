@@ -9,8 +9,8 @@ public class UNOGame {
 	private static int HUMAN_PLAYER_NUM = 3;
 	private static int AI_PLAYER_NUM = 0;
 	private static int DEALER_INDEX = -1;
-	private static int CURRENT_INDEX = -1; 
-	private static boolean IS_CLOCKWISE = true; //0,1,2,3...
+	private static int CURRENT_INDEX = -1;
+	private static boolean IS_CLOCKWISE = true; //which is 0,1,2,3...
 
 
 	private void initDeck(Deque<Card> deck) {
@@ -94,21 +94,32 @@ public class UNOGame {
 	private void flipTopCard(Deque<Card> deck, ArrayList<Player> players) {
 
 		Card top = deck.getLast();
-		while(top.getScore() == 50) { // must be wildcard
+		while(top instanceof WildCard) {
 			
 			// DEBUG:
-			// WildCard a = (WildCard)top;
+			WildCard wTop = (WildCard)top;
 			// System.out.println(a.getWildType());
 			// System.out.println(deck.size());			
-			top = deck.removeLast();
-			deck.addFirst(top);
-			top = deck.getLast();
+
+			if(wTop.getWildType() == WildType.WILD_DRAW_FOUR) {
+
+				// CASE1: Return card to deck, shuffle, flip top card to start discard pile
+				shuffle(deck);
+				top = deck.getLast();
+			} else {
+
+				// CASE2: Player to dealer's left declares first color to be matched, 
+				// then plays normally
+
+				// do nothing in this function
+			}
 		}
-		if(top.getScore() == 20) { //actionCard
+		if(top instanceof ActionCard) { //actionCard
 			
 			ActionCard mActionCard = (ActionCard) top;
 			if(mActionCard.getAction() == Actions.REVERSE) {
 				
+				// Dealer plays first; play proceeds counterclockwise
 				CURRENT_INDEX = DEALER_INDEX;
 				IS_CLOCKWISE = false;
 				return;
@@ -136,9 +147,52 @@ public class UNOGame {
 		DEALER_INDEX = pickDealer(deck, players);
 		shuffle(deck);
 		dealCards(deck, players);
-
 		flipTopCard(deck, players);
 		
+		int round = 1;
+
+		while(true) {
+
+			Deque<Card> discardPile = new LinkedList<Card>();
+
+			Card top = deck.getLast();
+			System.out.println("************[ROUND " + round + "]************");
+			System.out.println("CURRENT PLAYER:  " + CURRENT_INDEX);
+			System.out.println("CURRENT CARD INFO:");
+			System.out.println("1. CARD COLOR: " + top.getColor());
+
+			if(top instanceof WildCard) {
+
+				WildCard wTop = (WildCard)top;
+				System.out.println("2. WILD CARD EFFECT: " + wTop.getWildType());
+
+			} else if (top instanceof ActionCard) {
+
+				ActionCard aTop = (ActionCard)top;
+				System.out.println("2. ACTION CARD EFFECT: " + aTop.getAction());
+
+			} else {
+
+				NumberCard nTop = (NumberCard)top;
+				System.out.println("2. NUMBER CARD: " + nTop.getNumber());
+			}
+
+			if(IS_CLOCKWISE) {
+
+				if(CURRENT_INDEX == HUMAN_PLAYER_NUM - 1)
+					CURRENT_INDEX = 0;
+				else
+					CURRENT_INDEX++;
+			} else {
+
+				if(CURRENT_INDEX == 0)
+					CURRENT_INDEX = HUMAN_PLAYER_NUM - 1;
+				else
+					CURRENT_INDEX--;
+			}
+			round++;
+		}
+
 		// DEBUG:
 		// Deque<Card> testDeck = new LinkedList<Card>();
 
