@@ -95,12 +95,14 @@ public class UNOGame {
 
 		Card top = deck.getLast();
 		while(top.getScore() == 50) { // must be wildcard
-			deck.addFirst(top);
-			System.out.println(deck.size());
+			
+			// DEBUG:
+			// WildCard a = (WildCard)top;
+			// System.out.println(a.getWildType());
+			// System.out.println(deck.size());			
 			top = deck.removeLast();
-			WildCard a = (WildCard)top;
-			System.out.println(a.getWildType());
-			System.out.println(deck.size());
+			deck.addFirst(top);
+			top = deck.getLast();
 		}
 		if(top.getScore() == 20) { //actionCard
 			
@@ -135,10 +137,12 @@ public class UNOGame {
 		shuffle(deck);
 		dealCards(deck, players);
 
-		// flipTopCard(deck, players);
+		flipTopCard(deck, players);
 		
-
+		// DEBUG:
 		// Deque<Card> testDeck = new LinkedList<Card>();
+
+		// testDeck.add(new ActionCard(Actions.values()[2], Colors.BLUE));
 		// testDeck.add(new WildCard(WildType.values()[0], Colors.BLACK));
 		// testDeck.add(new WildCard(WildType.values()[1], Colors.BLACK));
 		// flipTopCard(testDeck, players);
