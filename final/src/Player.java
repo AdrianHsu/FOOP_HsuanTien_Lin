@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Player {
+public abstract class Player {
 	
 	Player(){}
 
