@@ -156,8 +156,10 @@ public class UNOGame {
 			Deque<Card> discardPile = new LinkedList<Card>();
 
 			Card top = deck.getLast();
-			System.out.println("************[ROUND " + round + "]************");
-			System.out.println("CURRENT PLAYER:  " + CURRENT_INDEX);
+			System.out.println("==================[ROUND " + round + "]==================");
+			System.out.println("*********************************************");
+
+			System.out.println("CURRENT PLAYER:  " + (CURRENT_INDEX + 1));
 			System.out.println("CURRENT CARD INFO:");
 			System.out.println("1. CARD COLOR: " + top.getColor());
 
@@ -176,6 +178,32 @@ public class UNOGame {
 				NumberCard nTop = (NumberCard)top;
 				System.out.println("2. NUMBER CARD: " + nTop.getNumber());
 			}
+			System.out.println("*********************************************");
+			System.out.println("YOUR CARDS IN HAND:  ");
+
+			ArrayList<Card> pHand = players.get(CURRENT_INDEX).hand;
+			for(int i = 0; i < pHand.size(); i++) {
+
+				System.out.println("CARD INDEX: "+ i);
+				System.out.println("1. CARD COLOR: " + pHand.get(i).getColor());
+				if(pHand.get(i) instanceof WildCard) {
+
+					WildCard wTop = (WildCard)pHand.get(i);
+					System.out.println("2. WILD CARD EFFECT: " + wTop.getWildType());
+
+				} else if (pHand.get(i) instanceof ActionCard) {
+
+					ActionCard aTop = (ActionCard)pHand.get(i);
+					System.out.println("2. ACTION CARD EFFECT: " + aTop.getAction());
+
+				} else {
+
+					NumberCard nTop = (NumberCard)pHand.get(i);
+					System.out.println("2. NUMBER CARD: " + nTop.getNumber());
+				}
+			}
+			System.out.println("*********************************************");
+
 
 			if(IS_CLOCKWISE) {
 
