@@ -1,9 +1,10 @@
 public class WildCard extends Card {
 	
-	public WildCard(Colors _color) {
+	public WildCard(WildType _wildType, Colors _color) {
+		
 		super(_color);
+		wildType = _wildType;
 	}
 
-	private Colors color;
-	//effect
+	private WildType wildType;
 }
