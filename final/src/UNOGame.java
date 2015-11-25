@@ -7,9 +7,9 @@ import java.util.Scanner;
 
 public class UNOGame {
 	
-	public static int PLAYER_NUM = 3;
+	// public static int PLAYER_NUM = 3;
 	public static int HUMAN_PLAYER_NUM = 3;
-	public static int AI_PLAYER_NUM = 0;
+	// public static int AI_PLAYER_NUM = 0;
 	public static int DEALER_INDEX = -1;
 	public static int CURRENT_INDEX = -1;
 	public static int CURRENT_PLUS = 0;
@@ -43,7 +43,7 @@ public class UNOGame {
 				deck.add(new NumberCard(i, Colors.values()[j]) );
 			}
 		}
-		for( int i = 0; i < 3m; i++ ) {
+		for( int i = 0; i < 30; i++ ) {
 
 			for( int j = 0; j < 4; j++ ) {
 				
@@ -88,6 +88,7 @@ public class UNOGame {
 				dealerScore = mCard.score;
 			}
 		}
+		System.out.println("DEALER IS PLAYER:" + (dealerIndex + 1));
 		return dealerIndex;
 	}
 	public void dealCards(Deque<Card> deck, ArrayList<Player> players) {
@@ -114,6 +115,7 @@ public class UNOGame {
 			if(wTop.getWildType() == WildType.WILD_DRAW_FOUR) {
 
 				// CASE1: Return card to deck, shuffle, flip top card to start discard pile
+				System.out.println("TOP CARD IS WILD_DRAW_FOUR: RETURN CARD TO DECK AND SHUFFLE AGAIN");
 				shuffle();
 				top = deck.getLast();
 			} else {
@@ -133,6 +135,11 @@ public class UNOGame {
 				CURRENT_INDEX = DEALER_INDEX;
 				IS_CLOCKWISE = false;
 				return;
+			} else if (mActionCard.getAction() == Actions.SKIP) {
+				IS_SKIPPED = true;
+			} else {
+				IS_SKIPPED = true;
+				CURRENT_PLUS += 2;
 			}
 		}
 		if(DEALER_INDEX == HUMAN_PLAYER_NUM - 1)
@@ -460,6 +467,8 @@ public class UNOGame {
 		
 		int round = 1;
 		Card top = deck.getLast();
+		discardPile.add(top);
+
 		boolean IS_NOT_OVER = true;
 		while(IS_NOT_OVER) {
 
@@ -492,6 +501,7 @@ public class UNOGame {
 			} else {
 
 			}
+			
 			if(IS_NOT_OVER) {
 				if(IS_CLOCKWISE) {
 
