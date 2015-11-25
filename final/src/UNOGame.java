@@ -152,6 +152,50 @@ public class UNOGame {
 		for(int i = 0; i < numOfCards; i++)
 			player.hand.add(deck.removeLast());
 	}
+	public void printHand(ArrayList<Card> pHand) {
+		for(int i = 0; i < pHand.size(); i++) {
+
+			System.out.println("CARD INDEX: "+ i);
+			System.out.println("1. CARD COLOR: " + pHand.get(i).getColor());
+			if(pHand.get(i) instanceof WildCard) {
+
+				WildCard wTop = (WildCard)pHand.get(i);
+				System.out.println("2. WILD CARD EFFECT: " + wTop.getWildType());
+
+			} else if (pHand.get(i) instanceof ActionCard) {
+
+				ActionCard aTop = (ActionCard)pHand.get(i);
+				System.out.println("2. ACTION CARD EFFECT: " + aTop.getAction());
+
+			} else {
+
+				NumberCard nTop = (NumberCard)pHand.get(i);
+				System.out.println("2. CARD NUMBER: " + nTop.getNumber());
+			}
+		}
+	}
+	public void printCard(Card card) {
+		
+		System.out.println("CURRENT CARD INFO:");
+		System.out.println("1. CARD COLOR: " + top.getColor());
+
+		if(top instanceof WildCard) {
+
+			WildCard wTop = (WildCard)top;
+			System.out.println("2. WILD CARD EFFECT: " + wTop.getWildType());
+
+		} else if (top instanceof ActionCard) {
+
+			ActionCard aTop = (ActionCard)top;
+			System.out.println("2. ACTION CARD EFFECT: " + aTop.getAction());
+
+		} else {
+
+			NumberCard nTop = (NumberCard)top;
+			System.out.println("2. CARD NUMBER: " + nTop.getNumber());
+		}
+	}
+
 	public void playGame() {
 
 		Deque<Card> deck = new LinkedList<Card>();
@@ -179,48 +223,12 @@ public class UNOGame {
 			System.out.println("*********************************************");
 
 			System.out.println("CURRENT PLAYER:  " + (CURRENT_INDEX + 1));
-			System.out.println("CURRENT CARD INFO:");
-			System.out.println("1. CARD COLOR: " + top.getColor());
-
-			if(top instanceof WildCard) {
-
-				WildCard wTop = (WildCard)top;
-				System.out.println("2. WILD CARD EFFECT: " + wTop.getWildType());
-
-			} else if (top instanceof ActionCard) {
-
-				ActionCard aTop = (ActionCard)top;
-				System.out.println("2. ACTION CARD EFFECT: " + aTop.getAction());
-
-			} else {
-
-				NumberCard nTop = (NumberCard)top;
-				System.out.println("2. CARD NUMBER: " + nTop.getNumber());
-			}
+			printCard(top);
 			System.out.println("*********************************************");
 			System.out.println("YOUR CARDS IN HAND:  ");
 
 			ArrayList<Card> pHand = players.get(CURRENT_INDEX).hand;
-			for(int i = 0; i < pHand.size(); i++) {
-
-				System.out.println("CARD INDEX: "+ i);
-				System.out.println("1. CARD COLOR: " + pHand.get(i).getColor());
-				if(pHand.get(i) instanceof WildCard) {
-
-					WildCard wTop = (WildCard)pHand.get(i);
-					System.out.println("2. WILD CARD EFFECT: " + wTop.getWildType());
-
-				} else if (pHand.get(i) instanceof ActionCard) {
-
-					ActionCard aTop = (ActionCard)pHand.get(i);
-					System.out.println("2. ACTION CARD EFFECT: " + aTop.getAction());
-
-				} else {
-
-					NumberCard nTop = (NumberCard)pHand.get(i);
-					System.out.println("2. CARD NUMBER: " + nTop.getNumber());
-				}
-			}
+			printHand(pHand);
 			System.out.println("*********************************************");
 			if(top instanceof NumberCard) {
 
@@ -247,15 +255,13 @@ public class UNOGame {
 						}
 					} else if (pHand.get(i) instanceof ActionCard) {
 
-						// if(pHand.get(i).getColor() == top.getColor())
-						// 	canBeDiscardedIndex[i] = true;
-						// else
-						// 	canBeDiscardedIndex[i] = false;
+
 					} else {
 
 						NumberCard nHand = (NumberCard)pHand.get(i);
 						NumberCard nTop = (NumberCard)top;
-						if(nHand.getColor() == nTop.getColor() || nHand.getNumber() == nTop.getNumber()) {
+						if(nHand.getColor() == nTop.getColor() ||
+						   nHand.getNumber() == nTop.getNumber()) {
 							
 							canBeDiscardedIndex[i] = true;
 						} else {
@@ -276,7 +282,6 @@ public class UNOGame {
 					drawCard(players.get(CURRENT_INDEX), 1, deck, discardPile);
 					drawOne = true;
 					System.out.println("");
-
 				}
 				else {
 					System.out.println("");
