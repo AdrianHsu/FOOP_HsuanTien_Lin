@@ -16,7 +16,7 @@ public class UNOGame {
 	public static boolean IS_CLOCKWISE = true; //which is 0,1,2,3...
 	public static boolean IS_SKIPPED = false;
 	public static boolean IS_WILD_COLOR = false;
-	public static Colors CURRENT_WILD_COLOR;
+	public static Colors CURRENT_WILD_COLOR = null;
 
 
 
@@ -29,11 +29,11 @@ public class UNOGame {
 		if(!deck.isEmpty()) {
 			deck.clear();
 		}
-		for( int i = 0; i < 50; i++ ) {
+		for( int i = 0; i < 4; i++ ) {
 			
-			// deck.add(new NumberCard(0, Colors.values()[i]) );
+			deck.add(new NumberCard(0, Colors.values()[i]) );
 			deck.add(new WildCard(WildType.values()[0], Colors.BLACK));
-			// deck.add(new WildCard(WildType.values()[1], Colors.BLACK));
+			deck.add(new WildCard(WildType.values()[1], Colors.BLACK));
 		}
 		
 		for( int i = 1; i <= 9; i++ ) {
@@ -90,7 +90,7 @@ public class UNOGame {
 				dealerScore = mCard.score;
 			}
 		}
-		System.out.println("DEALER IS PLAYER:" + (dealerIndex + 1));
+		System.out.println("DEALER IS: PLAYER " + (dealerIndex + 1));
 		return dealerIndex;
 	}
 	public void dealCards(Deque<Card> deck, ArrayList<Player> players) {
@@ -107,28 +107,36 @@ public class UNOGame {
 	public void flipTopCard(Deque<Card> deck, ArrayList<Player> players) {
 
 		Card top = deck.getLast();
-		while(top instanceof WildCard) {
-			
-			// DEBUG:
-			WildCard wTop = (WildCard)top;
-			// System.out.println(a.getWildType());
-			// System.out.println(deck.size());			
 
+		if (top instanceof WildCard) {
+			WildCard wTop = (WildCard)top;
 			if(wTop.getWildType() == WildType.WILD_DRAW_FOUR) {
 
 				// CASE1: Return card to deck, shuffle, flip top card to start discard pile
-				System.out.println("TOP CARD IS WILD_DRAW_FOUR: RETURN CARD TO DECK AND SHUFFLE AGAIN");
-				shuffle();
-				top = deck.getLast();
-			} else {
-
+				while(true) {
+					System.out.println("TOP CARD IS WILD_DRAW_FOUR: RETURN CARD TO DECK AND SHUFFLE AGAIN");
+					shuffle();
+					top = deck.getLast();
+					if(top instanceof WildCard) {
+						
+						wTop = (WildCard)top;
+						if(wTop.getWildType() == WildType.WILD_DRAW_FOUR)
+							continue;
+					}
+					break;
+				}
+			}
+		}
+		if (top instanceof WildCard) {
+			
+				WildCard wTop = (WildCard)top;
 				// CASE2: Player to dealer's left declares first color to be matched, 
 				// then plays normally
 
 				// do nothing in this function
-			}
 		}
-		if(top instanceof ActionCard) { //actionCard
+		
+		if (top instanceof ActionCard) { //actionCard
 			
 			ActionCard mActionCard = (ActionCard) top;
 			if(mActionCard.getAction() == Actions.REVERSE) {
@@ -334,7 +342,70 @@ public class UNOGame {
 				System.out.println("*********************************************");
 				pickCard(pHand, top, player, canBeDiscardedIndex);
 			}
+		} else {
+			boolean[] canBeDiscardedIndex = new boolean[pHand.size()];
+			for(int i = 0; i < pHand.size(); i++)
+				canBeDiscardedIndex[i] = false;
+			if(IS_SKIPPED) {
+				boolean skip = aDrawFourCanBeDiscarded(pHand, top, player, canBeDiscardedIndex);
+				if(skip) {
+
+					System.out.println("PLAYER ARE SKIPPED, DREW " + CURRENT_PLUS + " CARDS");
+					drawCard(player, CURRENT_PLUS);
+					IS_SKIPPED = false;
+					CURRENT_PLUS = 0;
+					System.out.println("*********************************************");
+				} else {
+					pickCard(pHand, top, player, canBeDiscardedIndex);
+				}
+			} else {
+				boolean drawOne = wPrintCardsCanBeDiscarded(pHand, top, player, canBeDiscardedIndex);
+
+				if(drawOne) {
+					// NO MATCHING CARD
+					System.out.print("NONE: NO MATCHING CARD, DRAW 1 CARD AND PASSED");
+					drawCard(player, 1);
+					System.out.println("");
+				}
+				else {
+					System.out.println("");
+					System.out.println("*********************************************");
+					pickCard(pHand, top, player, canBeDiscardedIndex);
+				}
+			}
+
 		}
+	}
+	public boolean aDrawFourCanBeDiscarded(ArrayList<Card> pHand, Card top, Player player, boolean[] canBeDiscardedIndex) {
+
+		boolean skip = true;
+		WildCard wTop = (WildCard)top;
+		for(int i = 0; i < pHand.size(); i++) {
+			
+			Card mCard = pHand.get(i);
+			if(mCard instanceof WildCard) {
+
+				WildCard wCard = (WildCard)mCard;
+				if(wCard.getWildType() == WildType.WILD_DRAW_FOUR)
+					canBeDiscardedIndex[i] = true;
+				else 
+					canBeDiscardedIndex[i] = false;
+			} else
+				canBeDiscardedIndex[i] = false;
+			
+			if(canBeDiscardedIndex[i] == true) {
+				skip = false;
+			}
+		}
+		if(!skip) {
+			System.out.println("YOUR CARDS OF WHICH CAN BE DISCARDED: ");
+			for(int i = 0; i < pHand.size(); i++)
+				if(canBeDiscardedIndex[i] == true)
+					System.out.print(i + " ");
+
+			System.out.println("");
+		}
+		return skip;
 	}
 	public boolean aDrawTwoCanBeDiscarded(ArrayList<Card> pHand, Card top, Player player, boolean[] canBeDiscardedIndex) {
 
@@ -345,6 +416,13 @@ public class UNOGame {
 			Card mCard = pHand.get(i);
 			if(mCard instanceof WildCard) {
 
+				WildCard wCard = (WildCard)mCard;
+				if(wCard.getWildType() == WildType.WILD) {
+					// can be discarded exclude +2, +4
+					canBeDiscardedIndex[i] = false;
+				} else {
+					canBeDiscardedIndex[i] = true;
+				}
 			} else if(mCard instanceof ActionCard) {
 				ActionCard aCard = (ActionCard)mCard;
 
@@ -518,6 +596,11 @@ public class UNOGame {
 			}
 
 			CURRENT_WILD_COLOR = Colors.values()[color];
+			WildCard wCard = (WildCard)pHand.get(var);
+			if(wCard.getWildType() == WildType.WILD_DRAW_FOUR) {
+				IS_SKIPPED = true;
+				CURRENT_PLUS += 4;				
+			}
 		}	
 		discardPile.add( pHand.remove(var) );
 	}
@@ -560,7 +643,25 @@ public class UNOGame {
 			} else if (top instanceof ActionCard) {				
 				topIsActionCard(pHand, top, players.get(CURRENT_INDEX));
 			} else {
-				topIsWildCard(pHand, top, players.get(CURRENT_INDEX));
+
+				WildCard wTop = (WildCard) top;
+				if(round == 1 && wTop.getWildType() == WildType.WILD) {
+					System.out.println("FIRST ROUND ONLY: PICK A COLOR: (0)RED, (1)BLUE, (2)YELLOW, (3)GREEN ");
+					int color = -1;
+					
+					Scanner scanner = new Scanner(System.in);
+					color = scanner.nextInt();
+					while(true) {
+						if(color > 3 || color < 0) {
+							System.out.println("INVALID, PICK AGAIN.");
+							color = scanner.nextInt();
+							continue;
+						}
+						break;
+					}
+					CURRENT_WILD_COLOR = Colors.values()[color];					
+				} else
+					topIsWildCard(pHand, top, players.get(CURRENT_INDEX));
 			}
 
 			top = discardPile.getLast();
