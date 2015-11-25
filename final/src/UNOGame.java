@@ -24,7 +24,7 @@ public class UNOGame {
 	public ArrayList<Player> players = new ArrayList<Player>();
 	public Deque<Card> discardPile = new LinkedList<Card>();
 
-	public void initDeck(Deque<Card> deck) {
+	public void initDeck() {
 		
 		if(!deck.isEmpty()) {
 			deck.clear();
@@ -77,7 +77,7 @@ public class UNOGame {
 			// System.out.println(deck.getLast().getScore() + "   " + i);
 		}
 	}
-	public int pickDealer(Deque<Card> deck, ArrayList<Player> players) {
+	public int pickDealer() {
 
 		int dealerIndex = -1;
 		int dealerScore = -1;
@@ -93,7 +93,7 @@ public class UNOGame {
 		System.out.println("DEALER IS: PLAYER " + (dealerIndex + 1));
 		return dealerIndex;
 	}
-	public void dealCards(Deque<Card> deck, ArrayList<Player> players) {
+	public void dealCards() {
 
 		for(int i = 0; i < 7; i++) {
 
@@ -104,7 +104,7 @@ public class UNOGame {
 			}
 		}
 	}
-	public void flipTopCard(Deque<Card> deck, ArrayList<Player> players) {
+	public void flipTopCard() {
 
 		Card top = deck.getLast();
 
@@ -219,7 +219,6 @@ public class UNOGame {
 			System.out.println("2. CARD NUMBER: " + nTop.getNumber());
 		}
 	}
-
 	public void topIsNumberCard(ArrayList<Card> pHand, Card top, Player player) {
 		
 		boolean[] canBeDiscardedIndex = new boolean[pHand.size()];
@@ -450,7 +449,6 @@ public class UNOGame {
 		}
 		return skip;
 	}
-
 	public boolean aPrintCardsCanBeDiscarded(ArrayList<Card> pHand, Card top, Player player, boolean[] canBeDiscardedIndex) {
 	
 		boolean drawOne = true;
@@ -612,11 +610,11 @@ public class UNOGame {
 			players.add(new HumanPlayer());
 		}
 
-		initDeck(deck);
-		DEALER_INDEX = pickDealer(deck, players);
+		initDeck();
+		DEALER_INDEX = pickDealer();
 		shuffle();
-		dealCards(deck, players);
-		flipTopCard(deck, players);
+		dealCards();
+		flipTopCard();
 		
 		int round = 1;
 		Card top = deck.getLast();
