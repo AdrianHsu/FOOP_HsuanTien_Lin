@@ -23,8 +23,8 @@ public class UNOGame {
 		for( int i = 0; i < 4; i++ ) {
 			
 			deck.add(new NumberCard(0, Colors.values()[i]) );
-			deck.add(new WildCard(WildType.values()[0], Colors.BLACK));
-			deck.add(new WildCard(WildType.values()[1], Colors.BLACK));
+			// deck.add(new WildCard(WildType.values()[0], Colors.BLACK));
+			// deck.add(new WildCard(WildType.values()[1], Colors.BLACK));
 		}
 		
 		for( int i = 1; i <= 9; i++ ) {
@@ -41,8 +41,8 @@ public class UNOGame {
 			for( int j = 0; j < 4; j++ ) {
 				
 				// two same color action cards
-				deck.add(new ActionCard(Actions.values()[i], Colors.values()[j]) );
-				deck.add(new ActionCard(Actions.values()[i], Colors.values()[j]) );
+				// deck.add(new ActionCard(Actions.values()[i], Colors.values()[j]) );
+				// deck.add(new ActionCard(Actions.values()[i], Colors.values()[j]) );
 			}
 		}
 
@@ -170,10 +170,6 @@ public class UNOGame {
 		
 		int round = 1;
 		Card top = deck.getLast();
-		Card second;
-		Card tmpCard;
-		Colors chosenColor;
-		int chosenNumber;
 		boolean IS_REVERSE = false;
 		while(true) {
 
@@ -199,7 +195,7 @@ public class UNOGame {
 			} else {
 
 				NumberCard nTop = (NumberCard)top;
-				System.out.println("2. NUMBER CARD: " + nTop.getNumber());
+				System.out.println("2. CARD NUMBER: " + nTop.getNumber());
 			}
 			System.out.println("*********************************************");
 			System.out.println("YOUR CARDS IN HAND:  ");
@@ -222,7 +218,7 @@ public class UNOGame {
 				} else {
 
 					NumberCard nTop = (NumberCard)pHand.get(i);
-					System.out.println("2. NUMBER CARD: " + nTop.getNumber());
+					System.out.println("2. CARD NUMBER: " + nTop.getNumber());
 				}
 			}
 			System.out.println("*********************************************");
@@ -230,7 +226,7 @@ public class UNOGame {
 
 				boolean[] canBeDiscardedIndex = new boolean[pHand.size()];
 				boolean drawOne = true;
-				System.out.print("YOUR CARDS OF WHICH CAN BE DISCARDED: ");
+				System.out.println("YOUR CARDS OF WHICH CAN BE DISCARDED: ");
 				for(int i = 0; i < pHand.size(); i++) {
 
 					if(pHand.get(i) instanceof WildCard) {
@@ -238,23 +234,23 @@ public class UNOGame {
 						if(wHand.getWildType() == WildType.WILD_DRAW_FOUR) {
 
 							// May be legally played only if the player has no cards of the current color; 
-							boolean legal = true;
-							for(int j = 0; j < pHand.size(); j++) {
-								if(top.getColor() == pHand.get(j).getColor() ) //IMPOSSIBLE: top.getColor() != Colors.BLACK
-									legal = false;
-							}
-							if(legal)
-								canBeDiscardedIndex[i] = true;
-						} else {
+						// 	boolean legal = true;
+						// 	for(int j = 0; j < pHand.size(); j++) {
+						// 		if(top.getColor() == pHand.get(j).getColor() ) //IMPOSSIBLE: top.getColor() != Colors.BLACK
+						// 			legal = false;
+						// 	}
+						// 	if(legal)
+						// 		canBeDiscardedIndex[i] = true;
+						// } else {
 
-							canBeDiscardedIndex[i] = true;
+						// 	canBeDiscardedIndex[i] = true;
 						}
 					} else if (pHand.get(i) instanceof ActionCard) {
 
-						if(pHand.get(i).getColor() == top.getColor())
-							canBeDiscardedIndex[i] = true;
-						else
-							canBeDiscardedIndex[i] = false;
+						// if(pHand.get(i).getColor() == top.getColor())
+						// 	canBeDiscardedIndex[i] = true;
+						// else
+						// 	canBeDiscardedIndex[i] = false;
 					} else {
 
 						NumberCard nHand = (NumberCard)pHand.get(i);
@@ -273,11 +269,17 @@ public class UNOGame {
 						drawOne = false;
 					}	
 				}
+
 				if(drawOne) {
 					// NO MATCHING CARD
+					System.out.print("NONE: NO MATCHING CARD, DRAW 1 CARD AND PASSED");
 					drawCard(players.get(CURRENT_INDEX), 1, deck, discardPile);
+					drawOne = true;
+					System.out.println("");
+
 				}
 				else {
+					System.out.println("");
 					System.out.println("*********************************************");
 					System.out.println("PICK A NUMBER: ");
 					Scanner scanner = new Scanner(System.in);
@@ -310,7 +312,6 @@ public class UNOGame {
 						// } else if (aHand.getAction() == Actions.REVERSE) {
 						if(aHand.getAction() == Actions.REVERSE) {
 
-							IS_REVERSE = true;
 							IS_CLOCKWISE = !IS_CLOCKWISE;
 						}
 						
@@ -329,28 +330,23 @@ public class UNOGame {
 							}
 							break;
 						}
-						// if(wHand.getWildType() == WildType.WILD) {
+						if(wHand.getWildType() == WildType.WILD) {
 
-						// 	// (may be used on any turn even if the player has matching color)
+							// (may be used on any turn even if the player has matching color)
 					
-						// } else {
+						} else {
 
-						// 	// next player in sequence draws four cards and loses a turn. 
-						// 	// May be legally played only if the player has no cards of the current color; 
-						// 	// Wild cards and cards with the same number or symbol 
-						// 	// in a different color do not count.						
-						// }
+							// next player in sequence draws four cards and loses a turn. 
+							// May be legally played only if the player has no cards of the current color; 
+							// Wild cards and cards with the same number or symbol 
+							// in a different color do not count.						
+						}
 					}
-					if(!IS_REVERSE) {
 
-						second = top;
-						top = pHand.get(var);
-					} else {
-
-						IS_REVERSE = false;
-						second = pHand.get(var);
-						// top not changed
-					}
+					discardPile.add( pHand.remove(var) );
+					top = discardPile.getLast();
+					if(pHand.size() == 0)
+						break;
 				}
 			} else if (top instanceof ActionCard) {
 
@@ -373,6 +369,7 @@ public class UNOGame {
 			round++;
 		}
 
+		System.out.println("!!!!!!!!!PLAYER " + CURRENT_INDEX + " WINS!!!!!!!!!");
 		// DEBUG:
 		// Deque<Card> testDeck = new LinkedList<Card>();
 

@@ -1,6 +1,6 @@
 JAVAFLAGS = -g -d .
 
-all: uno
+all: uno run
 
 clean:
 	rm -f *.class
