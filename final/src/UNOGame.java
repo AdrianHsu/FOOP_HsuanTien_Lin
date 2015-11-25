@@ -202,41 +202,12 @@ public class UNOGame {
 	}
 	public void topIsNumberCard(ArrayList<Card> pHand, Card top, 
 																 Deque<Card> deck, Deque<Card> discardPile, Player player) {
-
+		
 		boolean[] canBeDiscardedIndex = new boolean[pHand.size()];
-		boolean drawOne = true;
-		NumberCard nTop = (NumberCard)top;
-
-		System.out.println("YOUR CARDS OF WHICH CAN BE DISCARDED: ");
-		for(int i = 0; i < pHand.size(); i++) {
-
-			if(pHand.get(i) instanceof WildCard) {
-
-			} else if (pHand.get(i) instanceof ActionCard) {
-
-				ActionCard aHand = (ActionCard)pHand.get(i);
-				if(aHand.getColor() == top.getColor()) {
-
-					if(aHand.getAction() == Actions.REVERSE) {
-						canBeDiscardedIndex[i] = true;
-					}
-				}
-			} else {
-
-				NumberCard nHand = (NumberCard)pHand.get(i);
-				if(nHand.getColor() == nTop.getColor() ||
-				   nHand.getNumber() == nTop.getNumber())
-						canBeDiscardedIndex[i] = true;
-				else
-					canBeDiscardedIndex[i] = false;
-			}
-
-			if(canBeDiscardedIndex[i] == true) {
-				System.out.print(i + " ");
-				drawOne = false;
-			}	
-		}
-
+		for(int i = 0; i < pHand.size(); i++)
+			canBeDiscardedIndex[i] = false;
+		boolean drawOne = nPrintCardsCanBeDiscarded(pHand, top, deck, discardPile, player,
+			canBeDiscardedIndex);
 		if(drawOne) {
 			// NO MATCHING CARD
 			System.out.print("NONE: NO MATCHING CARD, DRAW 1 CARD AND PASSED");
@@ -247,77 +218,18 @@ public class UNOGame {
 		else {
 			System.out.println("");
 			System.out.println("*********************************************");
-			System.out.println("PICK A NUMBER: ");
-			Scanner scanner = new Scanner(System.in);
-			int var =  scanner.nextInt();
-			
-			while(true) {
-				if(var >= pHand.size() || var < 0) {
-					System.out.println("INVALID, PICK AGAIN.");
-					var = scanner.nextInt();
-					continue;
-				}
-				if(canBeDiscardedIndex[var] == false) {
-					System.out.println("INVALID, PICK AGAIN.");
-					var = scanner.nextInt();
-					continue;
-				}
-				break;
-			}
-			System.out.println("YOU PICKED: " + var);
-			if(pHand.get(var) instanceof NumberCard) {
-
-
-			} else if (pHand.get(var) instanceof ActionCard) {
-
-				ActionCard aHand = (ActionCard)pHand.get(var);
-				if(aHand.getAction() == Actions.REVERSE)
-					IS_CLOCKWISE = !IS_CLOCKWISE;
-			} else {
-
-			}
-			discardPile.add( pHand.remove(var) );
-
+			pickCard(pHand, top, deck, discardPile, player, canBeDiscardedIndex);
 		}
 	}
 
-	
+
 	public void topIsActionCard(ArrayList<Card> pHand, Card top, 
 																 Deque<Card> deck, Deque<Card> discardPile, Player player) {
+		
 		boolean[] canBeDiscardedIndex = new boolean[pHand.size()];
-		boolean drawOne = true;
-		//diff
-		ActionCard aTop = (ActionCard)top;
-
-		System.out.println("YOUR CARDS OF WHICH CAN BE DISCARDED: ");
-		for(int i = 0; i < pHand.size(); i++) {
-
-			if(pHand.get(i) instanceof WildCard) {
-
-			} else if (pHand.get(i) instanceof ActionCard) {
-
-				ActionCard aHand = (ActionCard)pHand.get(i);
-				if(aHand.getColor() == top.getColor()) {
-
-					if(aHand.getAction() == Actions.REVERSE) {
-						canBeDiscardedIndex[i] = true;
-					}
-				}
-			} else {
-
-				NumberCard nHand = (NumberCard)pHand.get(i);
-				//diff
-				if(nHand.getColor() == aTop.getColor())
-						canBeDiscardedIndex[i] = true;
-				else
-					canBeDiscardedIndex[i] = false;
-			}
-
-			if(canBeDiscardedIndex[i] == true) {
-				System.out.print(i + " ");
-				drawOne = false;
-			}	
-		}
+		for(int i = 0; i < pHand.size(); i++)
+			canBeDiscardedIndex[i] = false;
+		boolean drawOne = aPrintCardsCanBeDiscarded(pHand, top, deck, discardPile, player, canBeDiscardedIndex);
 
 		if(drawOne) {
 			// NO MATCHING CARD
@@ -329,38 +241,114 @@ public class UNOGame {
 		else {
 			System.out.println("");
 			System.out.println("*********************************************");
-			System.out.println("PICK A NUMBER: ");
-			Scanner scanner = new Scanner(System.in);
-			int var =  scanner.nextInt();
-			
-			while(true) {
-				if(var >= pHand.size() || var < 0) {
-					System.out.println("INVALID, PICK AGAIN.");
-					var = scanner.nextInt();
-					continue;
-				}
-				if(canBeDiscardedIndex[var] == false) {
-					System.out.println("INVALID, PICK AGAIN.");
-					var = scanner.nextInt();
-					continue;
-				}
-				break;
-			}
-			System.out.println("YOU PICKED: " + var);
-			if(pHand.get(var) instanceof NumberCard) {
-
-
-			} else if (pHand.get(var) instanceof ActionCard) {
-
-				ActionCard aHand = (ActionCard)pHand.get(var);
-				if(aHand.getAction() == Actions.REVERSE)
-					IS_CLOCKWISE = !IS_CLOCKWISE;
-			} else {
-
-			}
-			discardPile.add( pHand.remove(var) );
+			pickCard(pHand, top, deck, discardPile, player, canBeDiscardedIndex);
 		}
 	}
+	public boolean nPrintCardsCanBeDiscarded(ArrayList<Card> pHand, Card top, 
+																 					Deque<Card> deck, Deque<Card> discardPile, Player player,
+					 																boolean[] canBeDiscardedIndex) {
+		boolean drawOne = true;
+		System.out.println("YOUR CARDS OF WHICH CAN BE DISCARDED: ");
+
+		NumberCard nTop = (NumberCard) top;
+
+		for(int i = 0; i < pHand.size(); i++) {
+
+			Card mCard = pHand.get(i);
+			if(mCard instanceof WildCard) {
+				//CASE: 3-1
+			} else if(mCard instanceof ActionCard) {
+				//CASE: 3-2
+				ActionCard aCard = (ActionCard)mCard;
+				if(aCard.getColor() == nTop.getColor()) {
+					if(aCard.getAction() == Actions.REVERSE) {
+						canBeDiscardedIndex[i] = true;
+					}
+				}
+			} else {
+				//CASE: 3-3
+				NumberCard nCard = (NumberCard)mCard;		
+				if(nCard.getColor() == nTop.getColor() || nCard.getNumber() == nTop.getNumber())
+					canBeDiscardedIndex[i] = true;			
+			}
+			if(canBeDiscardedIndex[i] == true) {
+				System.out.print(i + " ");
+				drawOne = false;
+			}
+		}
+
+		return drawOne;
+	}
+	public boolean aPrintCardsCanBeDiscarded(ArrayList<Card> pHand, Card top, 
+																 					Deque<Card> deck, Deque<Card> discardPile, Player player,
+					 																boolean[] canBeDiscardedIndex) {
+	
+		boolean drawOne = true;
+		System.out.println("YOUR CARDS OF WHICH CAN BE DISCARDED: ");
+
+		ActionCard aTop = (ActionCard)top;
+
+		for(int i = 0; i < pHand.size(); i++) {
+			Card mCard = pHand.get(i);
+			if(mCard instanceof WildCard) {
+				//CASE: 2-1
+			} else if(mCard instanceof ActionCard) {
+				//CASE: 2-2
+				ActionCard aCard = (ActionCard)mCard;
+				
+				if(aCard.getAction() == aTop.getAction()) {
+
+					if(aCard.getAction() == Actions.REVERSE) {
+						canBeDiscardedIndex[i] = true;
+					}
+				}
+			} else {
+				NumberCard nCard = (NumberCard)mCard;		
+				if(nCard.getColor() == aTop.getColor())
+					canBeDiscardedIndex[i] = true;				
+			}
+			if(canBeDiscardedIndex[i] == true) {
+				System.out.print(i + " ");
+				drawOne = false;
+			}
+		}
+		return drawOne;
+	}
+	public void pickCard(ArrayList<Card> pHand, Card top, 
+											 Deque<Card> deck, Deque<Card> discardPile, Player player,
+											 boolean[] canBeDiscardedIndex) {
+		System.out.println("PICK A NUMBER: ");
+		Scanner scanner = new Scanner(System.in);
+		int var =  scanner.nextInt();
+		
+		while(true) {
+			if(var >= pHand.size() || var < 0) {
+				System.out.println("INVALID, PICK AGAIN.");
+				var = scanner.nextInt();
+				continue;
+			}
+			if(canBeDiscardedIndex[var] == false) {
+				System.out.println("INVALID, PICK AGAIN.");
+				var = scanner.nextInt();
+				continue;
+			}
+			break;
+		}
+		System.out.println("YOU PICKED: " + var);
+		if(pHand.get(var) instanceof NumberCard) {
+
+
+		} else if (pHand.get(var) instanceof ActionCard) {
+
+			ActionCard aCard = (ActionCard)pHand.get(var);
+			if(aCard.getAction() == Actions.REVERSE)
+				IS_CLOCKWISE = !IS_CLOCKWISE;
+		} else {
+
+		}	
+		discardPile.add( pHand.remove(var) );
+	}
+
 	public void playGame() {
 
 		Deque<Card> deck = new LinkedList<Card>();
