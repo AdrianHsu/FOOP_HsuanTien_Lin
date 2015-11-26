@@ -602,7 +602,27 @@ public class UNOGame {
 		}	
 		discardPile.add( pHand.remove(var) );
 	}
+	public void firstRoundWildCheck(Card top) {
 
+		WildCard wTop = (WildCard)top;
+		if(wTop.getWildType() == WildType.WILD) {
+
+			System.out.println("FIRST ROUND ONLY: PICK A COLOR: (0)RED, (1)BLUE, (2)YELLOW, (3)GREEN ");
+			int color = -1;
+			
+			Scanner scanner = new Scanner(System.in);
+			color = scanner.nextInt();
+			while(true) {
+				if(color > 3 || color < 0) {
+					System.out.println("INVALID, PICK AGAIN.");
+					color = scanner.nextInt();
+					continue;
+				}
+				break;
+			}
+			CURRENT_WILD_COLOR = Colors.values()[color];	
+		}		
+	}
 	public void playGame() {
 
 		// suppose there are 3 players joined
@@ -641,24 +661,9 @@ public class UNOGame {
 			} else if (top instanceof ActionCard) {				
 				topIsActionCard(pHand, top, players.get(CURRENT_INDEX));
 			} else {
-
-				WildCard wTop = (WildCard) top;
-				if(round == 1 && wTop.getWildType() == WildType.WILD) {
-					System.out.println("FIRST ROUND ONLY: PICK A COLOR: (0)RED, (1)BLUE, (2)YELLOW, (3)GREEN ");
-					int color = -1;
-					
-					Scanner scanner = new Scanner(System.in);
-					color = scanner.nextInt();
-					while(true) {
-						if(color > 3 || color < 0) {
-							System.out.println("INVALID, PICK AGAIN.");
-							color = scanner.nextInt();
-							continue;
-						}
-						break;
-					}
-					CURRENT_WILD_COLOR = Colors.values()[color];					
-				} else
+				if(round == 1)
+					firstRoundWildCheck(top);		
+				else
 					topIsWildCard(pHand, top, players.get(CURRENT_INDEX));
 			}
 
@@ -685,13 +690,5 @@ public class UNOGame {
 		}
 		System.out.println("*********************************************");
 		System.out.println("CONGRATUATIONS! PLAYER " + (CURRENT_INDEX + 1)+ " WINS!");
-		// DEBUG:
-		// Deque<Card> testDeck = new LinkedList<Card>();
-
-		// testDeck.add(new ActionCard(Actions.values()[2], Colors.BLUE));
-		// testDeck.add(new WildCard(WildType.values()[0], Colors.BLACK));
-		// testDeck.add(new WildCard(WildType.values()[1], Colors.BLACK));
-		// flipTopCard(testDeck, players);
-
 	}
 }
