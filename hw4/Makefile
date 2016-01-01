@@ -7,4 +7,4 @@ hw4:
 clean:
 	rm *.class
 run:
-	java Game
+	java POOCasino 1 5 PlayerB03901023 PlayerB03901023 PlayerB03901023 PlayerB03901023
