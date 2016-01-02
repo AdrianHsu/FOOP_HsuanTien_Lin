@@ -733,6 +733,7 @@ public class POOCasino {
 						ArrayList<Card> hand = mPlayerStatus.getHand();
 						int playerSum = countHandSoftTotal(hand);
 						int dealerSum = countHandSoftTotal(Dealer.getHand());
+
 						if(dealerSum > playerSum)
 							try {
 								

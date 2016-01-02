@@ -71,7 +71,7 @@ public class PlayerB03901023 extends Player {
 		// 0 to 1
 		double var = Math.random();
 		ArrayList<Card> hand = my_open;
-		int total = POOCasino.countHandSoftTotal(hand);
+		int total = countHandSoftTotal(hand);
 
 
 		if(var >= 0.5 || total == 20) { // K, K or J, J...etc
