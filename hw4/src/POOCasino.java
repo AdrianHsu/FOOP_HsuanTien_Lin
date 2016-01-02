@@ -6,7 +6,9 @@ public class POOCasino {
 	private static int N_ROUND; //final
 	private static int N_PLAYERS; //final
 	private static int N_CHIP; //final
-	private static final String SYSTEM_MESSAGE = "|SYSTEM_MESSAGE| ";
+	public static final String SYSTEM_MESSAGE = "|SYSTEM_MESSAGE| ";
+	public static final String DEALER_MESSAGE = "|DEALER_MESSAGE| ";
+
 	private static final int MAX_N_PLAYERS = 4;
 
 	private static int CURRENT_N_ROUND = 1;
@@ -62,6 +64,7 @@ public class POOCasino {
 
 			System.out.println(SYSTEM_MESSAGE + "ROUND: " + CURRENT_N_ROUND + "/" + N_ROUND);
 			System.out.println(SYSTEM_MESSAGE + "NUMBER OF PLAYERS: " + CURRENT_N_PLAYERS + "/" + N_PLAYERS);
+			System.out.println("|==============================================================|");
 
 			for(int i = 0; i < CURRENT_N_PLAYERS; i++)
 				players.get(i).toString();
@@ -69,34 +72,57 @@ public class POOCasino {
 			for(int i = 0; i < N_PLAYERS; i++) {
 				int bet = players.get(i).make_bet(current_table, CURRENT_N_PLAYERS, i);
 				playerStatusArray.get(i).setBet(bet);
-
 			}
-			// face down card
-			for(int i = 0; i < N_PLAYERS; i++) {
 
-				ArrayList<Card> cards = current_table.get(i).getCards();
+			System.out.println(DEALER_MESSAGE + "retrive last_table cards and shuffle...");
+
+			for(int i = 0; i < CURRENT_N_PLAYERS; i++) {
+				ArrayList<Card> cards = playerStatusArray.get(i).getHand();
 				deckOfCards.insert(cards);
 				cards.clear();
+			}
+			deckOfCards.insert(Dealer.getHand());
+			Dealer.getHand().clear();
 
+			deckOfCards.shuffle();
+
+			System.out.println(DEALER_MESSAGE + "assign face-down card to players and dealer...");
+			
+			// face down card
+			for(int i = 0; i < N_PLAYERS; i++) {
+				ArrayList<Card> cards = playerStatusArray.get(i).getHand();
 				cards.add(deckOfCards.removeTop());
 			}
-			deckOfCards.insert(Dealer.getHand().getCards());
-			Dealer.getHand().getCards().clear();
+			Dealer.getHand().add(deckOfCards.removeTop());
 
-			Dealer.getHand().getCards().add(deckOfCards.removeTop());
+			System.out.println(DEALER_MESSAGE + "assign face-up card to players...");
 
-			// face top card
+			// face up card
 			for(int i = 0; i < N_PLAYERS; i++) {
 
-				ArrayList<Card> cards = current_table.get(i).getCards();
+				ArrayList<Card> cards = playerStatusArray.get(i).getHand();
 				cards.add(deckOfCards.removeTop());
 			}
-			Dealer.getHand().getCards().add(deckOfCards.removeTop());
+			System.out.println(DEALER_MESSAGE + "assign face-up card to dealer...");
+			Dealer.getHand().add(deckOfCards.removeTop());
 			
+			System.out.println(DEALER_MESSAGE + "face-up card value: " + Dealer.getHand().get(1).getValue());
+
 			if(Dealer.faceupCardIsAce()) {
+				System.out.println(DEALER_MESSAGE + "face-up card is ACE...");
+				System.out.println(DEALER_MESSAGE + "ask each player whether to buy an insurance of Bi/2 or not");
 
 				//ask each player whether to buy an insurance of Bi/2 or not.
+				for(int i = 0; i < CURRENT_N_PLAYERS; i++) {
+					System.out.println(DEALER_MESSAGE + playerStatusArray.get(i).getName() + "...");
 
+					Card my_open = playerStatusArray.get(i).getHand().get(1);
+					Card dealer_open = Dealer.getHand().get(1);
+					boolean buy = players.get(i).buy_insurance(my_open, dealer_open, current_table);
+					playerStatusArray.get(i).setInsurance(buy);
+				}
+			} else {
+				System.out.println(DEALER_MESSAGE + "face-up card is not ACE... continue");
 			}
 
 		}

@@ -33,6 +33,7 @@ public class PlayerB03901023 extends Player {
                     Card dealer_open,
                     ArrayList<Hand> current_table){
 		
+		
 		return true;
 	}
 	public boolean do_surrender(Card my_open,
