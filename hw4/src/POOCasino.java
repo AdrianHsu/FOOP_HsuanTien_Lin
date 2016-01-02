@@ -327,8 +327,7 @@ public class POOCasino {
 
 						boolean doubledown = mPlayer.do_double(my_open, dealer_open, getTable(playerStatusArray));
 						mPlayerStatus.setDoubledown(doubledown);
-						if(doubledown)
-							mPlayerStatus.setBet(mPlayerStatus.getBet() * 2);
+
 					} else {
    						System.out.println("Do split( or get Blackjack ) and then double down is not allowed"); 
 					}
@@ -545,6 +544,11 @@ public class POOCasino {
 						e.printStackTrace();
 						System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 					}
+
+				if(mPlayerStatus.getDoubledown()) {
+					mPlayerStatus.setBet(mPlayerStatus.getBet() * 2);
+					bet = (double)mPlayerStatus.getBet();
+				}
 
 				if(mPlayerStatus.getSplit()) {
 

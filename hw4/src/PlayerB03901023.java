@@ -194,7 +194,7 @@ public class PlayerB03901023 extends Player {
   		// result += "|	@ PLAYER NAME: ADRIAN_HSU\n";
   		// result += "|	@ CURRENT NUMBER OF CHIPS: " + get_chips() + "\n";
 		// result += "|==============================================================|\n";
-  		result += get_chips();
+  		result += (int) get_chips();
   		return result;
   	}
 }
