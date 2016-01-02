@@ -15,6 +15,26 @@ public class PlayerStatus {
 		split = false;
 		doubledown = false;
 	}
+
+	public void reset() {
+
+		// bet = 0; // ALREADY RESET(OVERRIDE)
+		insurance = false;
+		surrender = false;
+		busted = false;
+		stand = false;
+		blackjack = false;
+		split = false;
+		doubledown = false;
+		mHand.clear();
+		firstHand.clear();
+		secondHand.clear();
+		for(int i = 0; i < 2; i++) {
+			blackjackSplit[i] = false;
+			standSplit[i] = false;
+			bustedSplit[i] = false;
+		}	
+	}
 	public void setBet(int _bet){
 		bet = _bet;
 	}

@@ -171,20 +171,29 @@ public class POOCasino {
 			for(int i = 0; i < CURRENT_N_PLAYERS; i++)
 				players.get(i).toString();
 
+			System.out.println(DEALER_MESSAGE + "retrive last_table cards and shuffle...");
+
 			for(int i = 0; i < N_PLAYERS; i++) {
 				int bet = players.get(i).make_bet(getTable(playerStatusArray), CURRENT_N_PLAYERS, i);
 				playerStatusArray.get(i).setBet(bet);
 			}
 
-			System.out.println(DEALER_MESSAGE + "retrive last_table cards and shuffle...");
-
 			for(int i = 0; i < CURRENT_N_PLAYERS; i++) {
-				ArrayList<Card> cards = playerStatusArray.get(i).getHand();
-				deckOfCards.insert(cards);
-				cards.clear();
+				if(playerStatusArray.get(i).getSplit()){
+
+					for(int j = 0; j < 2; j++) {
+						deckOfCards.insert(playerStatusArray.get(i).getSplitHand(j));
+					}
+				} else {
+					ArrayList<Card> cards;
+					cards = playerStatusArray.get(i).getHand();
+					deckOfCards.insert(cards);
+				}
+				playerStatusArray.get(i).reset();
 			}
+
 			deckOfCards.insert(Dealer.getHand());
-			Dealer.getHand().clear();
+			Dealer.reset();
 
 			deckOfCards.shuffle();
 
@@ -319,7 +328,7 @@ public class POOCasino {
 			// Decide whether to hit, until a standing decision or busted, of course.
 			while(true) {
 				
-				int count = 0;
+				int count = 0; // count for player not hit(split included, * by 2)
 				for(int i = 0; i < CURRENT_N_PLAYERS; i++) {
 
 					Player mPlayer = players.get(i);
@@ -688,6 +697,8 @@ public class POOCasino {
 								System.out.println(e.toString());
 							}
 					}
+
+					CURRENT_N_ROUND++;
 				}
 			}
 

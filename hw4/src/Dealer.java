@@ -13,7 +13,12 @@ public class Dealer {
 			return true;
 		return false;
 	}
-
+	public static void reset() {
+		blackjack = false;
+		stand = false;
+		busted = false;
+		mHand.clear();
+	}
 	public static ArrayList<Card> getHand() {
 		return mHand;
 	}
