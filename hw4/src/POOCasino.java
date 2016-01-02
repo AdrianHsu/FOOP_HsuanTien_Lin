@@ -21,8 +21,16 @@ public class POOCasino {
 		ArrayList<Hand> current_table = new ArrayList<Hand>();
 		for(int i = 0; i < CURRENT_N_PLAYERS; i++) {
 
-			Hand hand = new Hand(playerStatusArray.get(i).getHand());
-			current_table.add(hand);
+			if(playerStatusArray.get(i).getSplit()) {
+				Hand hand0 = new Hand(playerStatusArray.get(i).getSplitHand(0));
+				Hand hand1 = new Hand(playerStatusArray.get(i).getSplitHand(1));
+				current_table.add(hand0);
+				current_table.add(hand1);
+
+			} else {
+				Hand hand = new Hand(playerStatusArray.get(i).getHand());
+				current_table.add(hand);
+			}
 		}
 		return current_table;
 	}
@@ -259,27 +267,36 @@ public class POOCasino {
 					if(facedown.getValue() == faceup.getValue()) {
 				
 						System.out.println(DEALER_MESSAGE + "The two cards happen to be of equal face value");
-						System.out.println("Decide whether to split...");
-
-						ArrayList<Card> my_open = mPlayerStatus.getHand();
-						Card dealer_open = Dealer.getHand().get(1);
 						
-						split = mPlayer.do_split(my_open, dealer_open, getTable(playerStatusArray));
-						// If splitting, the player goes with two separate hands and continues
-						// the game with the decisions below.
-						mPlayerStatus.setSplit(split);
-						if(split)
-							splitNum++;
+						// Hitting split aces is usually not allowed. 
+						if(facedown.getValue() == 1) {
+							System.out.println(DEALER_MESSAGE + "However, hitting split aces is not allowed");
+						}
+						else {
+							System.out.println("Decide whether to split...");
 
-						// Re-splitting is not allowed.
+							ArrayList<Card> my_open = mPlayerStatus.getHand();
+							Card dealer_open = Dealer.getHand().get(1);
+							
+							split = mPlayer.do_split(my_open, dealer_open, getTable(playerStatusArray));
+							// If splitting, the player goes with two separate hands and continues
+							// the game with the decisions below.
+							mPlayerStatus.setSplit(split);
+							if(split)
+								splitNum++;
+
+							// Re-splitting is not allowed.
+						}
 					}
 
 					boolean blackjack = false;
-					if(countHandSoftTotal(mPlayerStatus.getHand()) == 21) {
-						blackjack = true;
-						mPlayerStatus.setBlackjack(blackjack);
-						System.out.println("You got a BLACKJACK!, set stand = true");
-						mPlayerStatus.setStand(true);
+					if(!split) {
+						if(countHandSoftTotal(mPlayerStatus.getHand()) == 21) {
+							blackjack = true;
+							mPlayerStatus.setBlackjack(blackjack);
+							System.out.println("You got a BLACKJACK!, set stand = true");
+							mPlayerStatus.setStand(true);
+						}
 					}
 					// Decide whether to double down.
 					if( !split && !blackjack ) {
@@ -315,7 +332,7 @@ public class POOCasino {
 						System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
 							": has already splited");
 						for(int j = 0; j < 2; j++) {
-							System.out.println(DEALER_MESSAGE + "CURRENT HAND INDEX:" + j);
+							System.out.println(DEALER_MESSAGE + "CURRENT HAND INDEX: " + j);
 							ArrayList<Card> hand = mPlayerStatus.getSplitHand(j);
 
 							if(mPlayerStatus.standSplit[j]) {
@@ -360,7 +377,7 @@ public class POOCasino {
 
 									} else {
 										int total = countHandSoftTotal(cards);
-										System.out.println(DEALER_MESSAGE + "your current total value(soft) of m(HAND " + j + " ) is " + total);
+										System.out.println(DEALER_MESSAGE + "your current total value(soft) of (HAND " + j + ") is " + total);
 									}
 		   						}
 							}
@@ -456,11 +473,50 @@ public class POOCasino {
 				System.out.println(DEALER_MESSAGE + " Got a BLACKJACK!, set stand = true");
 				Dealer.setStand(true);
 			}
-
-
-
 			// If the total card value is ≤ 16 or is a soft-17, hit.
-			// Otherwise, stand.
+			while(true) {
+				ArrayList<Card> cards = Dealer.getHand();
+				if(countHandSoftTotal(cards) <= 17) {
+					cards.add(deckOfCards.removeTop());
+				} else {
+					// Otherwise, stand.
+					int total = countHandSoftTotal(cards);
+					System.out.println(DEALER_MESSAGE + "dealer's total value(soft) is >= 17, which is" + total);
+					System.out.println(DEALER_MESSAGE + "Dealer stop hitting, stand");
+					break;
+				}
+				if(checkBusted(cards)) {
+					Dealer.setBusted(true);
+					System.out.println(DEALER_MESSAGE + "Dealer busted..., total = " + checkBustedValue(cards));
+					System.out.println(DEALER_MESSAGE + "Dealer stop hitting, busted");
+					break;
+				} else {
+					int total = countHandSoftTotal(cards);
+					System.out.println(DEALER_MESSAGE + "dealer's current total value(soft) is " + total);
+				}
+			}
+
+			// Compare the result of the dealer to the result of the player.
+
+			// CASE1. If player i surrenders, 1 Bi/2 goes to the casino.
+			
+			// CASE2. If player i gets busted, Bi goes to the casino.
+			
+			// CASE3. If player i gets a Blackjack, the player gets 3Bi/2 more chips unless the dealer also gets a Blackjack.
+			// In the latter case, it is a “push” and the player just get 0 more chips.
+			
+			// CASE4. If player i doesn’t get a Blackjack, and if the dealer gets busted, each player gets Bi more chips
+			
+			// CASE5. If player i doesn’t get a Blackjack, and if the dealer gets a Blackjack, 
+			// the bet Bi goes to the casino. If the player bought an insurance, 
+			// however, she/he gets Bi back from the insurance, making it even.
+
+			// CASE6. Finally, if neither player i nor the dealer gets a Blackjack, 
+			// and neither of them gets busted, the sum of face values on the 
+			// dealer’s and on player i’s hands are compared. 
+			// If the dealer gets more, the player loses and Bi goes to the casino. 
+			// If the player gets more, the player wins Bi more chips. 
+			// Otherwise it is a “push” and the player just get 0 more chips.
 
 
 		}
