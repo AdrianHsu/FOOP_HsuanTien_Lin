@@ -4,15 +4,16 @@ import java.util.ArrayList;
 
 public class PlayerB03901023 extends Player {
 
-	public PlayerB03901023(int chips){
-		super(chips);
+	public PlayerB03901023(String _name, int _chips){
+		super(_chips);
+		name = _name;
 	}
 	
 	// protected final double get_chips(){
 		
 	// 	return -1;
 	// }
-	public int make_bet(java.util.ArrayList<Hand> last_table,
+	public int make_bet(ArrayList<Hand> last_table,
            int total_player,
            int my_position){
 
@@ -20,32 +21,32 @@ public class PlayerB03901023 extends Player {
 	}
 	public boolean buy_insurance(Card my_open,
                     Card dealer_open,
-                    java.util.ArrayList<Hand> current_table){
+                    ArrayList<Hand> current_table){
 		
 		return true;
 	}
 	public boolean do_surrender(Card my_open,
                    Card dealer_open,
-                   java.util.ArrayList<Hand> current_table){
+                   ArrayList<Hand> current_table){
 		
 		return true;
 	}
 
-	public boolean do_split(java.util.ArrayList<Card> my_open,
+	public boolean do_split(ArrayList<Card> my_open,
                Card dealer_open,
-               java.util.ArrayList<Hand> current_table){
+               ArrayList<Hand> current_table){
 		
 		return true;
 	}
 	public boolean do_double(Hand my_open,
                 Card dealer_open,
-                java.util.ArrayList<Hand> current_table){
+                ArrayList<Hand> current_table){
 		
 		return true;
 	}
 	public boolean hit_me(Hand my_open,
              Card dealer_open,
-             java.util.ArrayList<Hand> current_table){
+             ArrayList<Hand> current_table){
 
 		return true;
 	}
@@ -62,4 +63,7 @@ public class PlayerB03901023 extends Player {
 
   		return "";
   	}
+
+  	public String getName(){return name;}
+  	private final String name;
 }
