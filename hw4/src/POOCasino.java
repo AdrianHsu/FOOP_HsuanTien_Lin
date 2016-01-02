@@ -139,7 +139,6 @@ public class POOCasino {
 		N_CHIP = Integer.valueOf(args[1]);
 		ArrayList<Player> players = new ArrayList<>();
 		ArrayList<PlayerStatus> playerStatusArray = new ArrayList<>();
-
 		DeckOfCards deckOfCards = new DeckOfCards();
 
 		for(int i = 2; i < args.length; i++) {
@@ -149,8 +148,8 @@ public class POOCasino {
 			if(i % 2 == 0)
 				players.add(new PlayerB03901023(N_CHIP));
 			else 
-				players.add(new PlayerB03901023(N_CHIP));
-				// players.add(new Player1(N_CHIP));
+				// players.add(new PlayerB03901023(N_CHIP));
+				players.add(new PlayerB03902039(N_CHIP));
 
 			playerStatusArray.add(new PlayerStatus(args[i]));
 			N_PLAYERS++;
@@ -205,6 +204,8 @@ public class POOCasino {
 			Dealer.reset();
 
 			deckOfCards.shuffle();
+			// DEBUG: 
+			// System.out.println("DECK OF CARDS SIZE:" + deckOfCards.get().size());
 
 			System.out.println(DEALER_MESSAGE + "assign face-down card to players and dealer...");
 			
@@ -534,6 +535,8 @@ public class POOCasino {
 			for(int i = 0; i < CURRENT_N_PLAYERS; i ++) {
 				Player mPlayer = players.get(i);
 				PlayerStatus mPlayerStatus = playerStatusArray.get(i);
+
+				// NegativeException Will not happened since bet >= 0 
 				double bet = (double)mPlayerStatus.getBet();
 				
 				if(mPlayerStatus.getSplit()) {

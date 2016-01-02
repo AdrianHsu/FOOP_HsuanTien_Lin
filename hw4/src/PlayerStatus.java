@@ -135,8 +135,6 @@ public class PlayerStatus {
 	private String name;
 	private ArrayList<Card> mHand = new ArrayList<>();
 
-
-
 	public boolean[] blackjackSplit = {false, false};
 	public boolean[] standSplit = {false, false};
 	public boolean[] bustedSplit = {false, false};

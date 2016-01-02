@@ -18,8 +18,13 @@ public class PlayerB03901023 extends Player {
 		if(get_chips() <= 0)
 			return 0;
 
-		double bet = get_chips() * 0.4 * Math.random();
-	
+		// NegativeException Will not happened
+
+		// BrokeException Handling
+		// double bet = get_chips() * 0.6 * Math.random();
+		// Normal cases, with no BrokeException chips
+		double bet = get_chips() * 0.3 * Math.random();
+
 		return (int)bet;
 	}
 	public boolean buy_insurance(Card my_open,
