@@ -10,6 +10,8 @@ public class POOCasino {
 	private static int N_CHIP; //final
 	public static final String SYSTEM_MESSAGE = "|SYSTEM_MESSAGE| ";
 	public static final String DEALER_MESSAGE = "|DEALER_MESSAGE| ";
+	private static final String [] suit = {"SPADE", "HEART", "DIAMOND", "CLUB"};
+	private static final String [] rank = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"}; 
 
 	private static final int MAX_N_PLAYERS = 4;
 
@@ -142,6 +144,7 @@ public class POOCasino {
 
 		for(int i = 2; i < args.length; i++) {
 
+			// players.add(new Player1());
 			players.add(new PlayerB03901023(N_CHIP));
 			playerStatusArray.add(new PlayerStatus(args[i]));
 			N_PLAYERS++;
@@ -158,18 +161,17 @@ public class POOCasino {
 		System.out.println(SYSTEM_MESSAGE + "NUMBER OF CHIPS INIT: " + N_CHIP);
 		System.out.println(SYSTEM_MESSAGE + "NUMBER OF ROUNDS INIT: " + N_ROUND);
 		System.out.println(SYSTEM_MESSAGE + "NUMBER OF PLAYERS INIT: " + N_PLAYERS);
-		System.out.println("|==============================================================|");
 
 
 		while(CURRENT_N_ROUND <= N_ROUND) {
 
-
+			System.out.println("|==============================================================|");
 			System.out.println(SYSTEM_MESSAGE + "ROUND: " + CURRENT_N_ROUND + "/" + N_ROUND);
 			System.out.println(SYSTEM_MESSAGE + "NUMBER OF PLAYERS: " + CURRENT_N_PLAYERS + "/" + N_PLAYERS);
 			System.out.println("|==============================================================|");
 
 			for(int i = 0; i < CURRENT_N_PLAYERS; i++)
-				players.get(i).toString();
+				System.out.println(players.get(i).toString());
 
 			System.out.println(DEALER_MESSAGE + "retrive last_table cards and shuffle...");
 
@@ -216,7 +218,8 @@ public class POOCasino {
 			}
 			System.out.println(DEALER_MESSAGE + "assign face-up card to dealer...");
 			Dealer.getHand().add(deckOfCards.removeTop());
-			
+			// Dealer.getHand().add(new Card((byte)1, (byte)1));
+
 			System.out.println(DEALER_MESSAGE + "Dealer face-up card value: " + Dealer.getHand().get(1).getValue());
 
 			// check insurance
@@ -266,8 +269,11 @@ public class POOCasino {
 					// Flip up (open) the face-down card.
 					Card facedown = mPlayerStatus.getHand().get(0);
 					Card faceup = mPlayerStatus.getHand().get(1);
+					System.out.println(DEALER_MESSAGE + mPlayerStatus.getName() + " face-up card is... ");
+					System.out.println(DEALER_MESSAGE + "Suit: " + suit[faceup.getSuit() - 1] + "; Value: " + rank[faceup.getValue() - 1]);
+
 					System.out.println(DEALER_MESSAGE + mPlayerStatus.getName() + " flip up the face-down card... ");
-					System.out.println(DEALER_MESSAGE + "Suit: " + facedown.getSuit() + "; Value: " + facedown.getValue());
+					System.out.println(DEALER_MESSAGE + "Suit: " + suit[facedown.getSuit() - 1] + "; Value: " + rank[facedown.getValue() - 1]);
 
 					
 					// If the two cards happen to be of equal face value,
@@ -347,6 +353,7 @@ public class POOCasino {
 							if(mPlayerStatus.blackjackSplit[j]) {
 								System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
 									": (HAND"+ j + ")has already BLACKJACK, total = " + countHandSoftTotal(hand));
+								count++;
 							}
 							if(mPlayerStatus.standSplit[j]) {
 								System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
@@ -395,99 +402,102 @@ public class POOCasino {
 		   						}
 							}
 						}
-						continue;
-					}
-					// non-split cases
-					if(mPlayerStatus.getBlackjack()) {
-						System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
-							": has already BLACKJACK, total = " + countHandSoftTotal(mPlayerStatus.getHand()));
-					}					
-					if(mPlayerStatus.getSurrender()) {
-						System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
-							": has already surrendered");
-						count++;
-					}
-					else if(mPlayerStatus.getStand()) {
-						System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
-							": has already stand, total = " + checkBustedValue(mPlayerStatus.getHand()));
-						count++;
-					}
-					else if(mPlayerStatus.getBusted()) {
-						System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
-							": has already busted, total = " + checkBustedValue(mPlayerStatus.getHand()));
-						count++;
-					}
-					else if(mPlayerStatus.getDoubledown() && !mPlayerStatus.getBusted()) {
-						System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
-							": has already stand for it's a doubledown, total = " + checkBustedValue(mPlayerStatus.getHand()));
-						count++;
 					}
 					else {
-						
-						Hand my_open = new Hand( mPlayerStatus.getHand() );
-						Card dealer_open = Dealer.getHand().get(1);
-   						
-						if(mPlayerStatus.getDoubledown() && mPlayerStatus.getHand().size() == 2) {
-
-	   						System.out.println("doubledown, must hit one card");
-
-							ArrayList<Card> cards = mPlayerStatus.getHand();
-							cards.add(deckOfCards.removeTop());
-							
-							if(checkBusted(cards)) {
-								mPlayerStatus.setBusted(true);
-								System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
-							" busted..., total = " + checkBustedValue(cards));
-
-							} else {
-								int total = countHandSoftTotal(cards);
-								System.out.println(DEALER_MESSAGE + "your current total value(soft) is " + total);
-							}
-							continue;
-						}
-   						System.out.println("decide whether to hit...");
-   						boolean conti = mPlayer.hit_me(my_open, dealer_open, getTable(playerStatusArray));
-   						if(!conti) {
-   							mPlayerStatus.setStand(!conti);
+						// non-split cases
+						if(mPlayerStatus.getBlackjack()) {
 							System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
-							" stand...");
-   						} else {
-   							ArrayList<Card> cards = mPlayerStatus.getHand();
-							cards.add(deckOfCards.removeTop());
+								": has already BLACKJACK, total = " + countHandSoftTotal(mPlayerStatus.getHand()));
+							count++;
+						}	else if(mPlayerStatus.getSurrender()) {
+							System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
+								": has already surrendered");
+							count++;
+						}
+						else if(mPlayerStatus.getStand()) {
+							System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
+								": has already stand, total = " + checkBustedValue(mPlayerStatus.getHand()));
+							count++;
+						}
+						else if(mPlayerStatus.getBusted()) {
+							System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
+								": has already busted, total = " + checkBustedValue(mPlayerStatus.getHand()));
+							count++;
+						}
+						else if(mPlayerStatus.getDoubledown() && !mPlayerStatus.getBusted()) {
+							System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
+								": has already stand for it's a doubledown, total = " + checkBustedValue(mPlayerStatus.getHand()));
+							count++;
+						}
+						else {
 							
-							if(checkBusted(cards)) {
-								mPlayerStatus.setBusted(true);
-								System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
-							" busted..., total = " + checkBustedValue(cards));
+							Hand my_open = new Hand( mPlayerStatus.getHand() );
+							Card dealer_open = Dealer.getHand().get(1);
+	   						
+							if(mPlayerStatus.getDoubledown() && mPlayerStatus.getHand().size() == 2) {
 
-							} else {
-								int total = countHandSoftTotal(cards);
-								System.out.println(DEALER_MESSAGE + "your current total value(soft) is " + total);
+		   						System.out.println("doubledown, must hit one card");
+
+								ArrayList<Card> cards = mPlayerStatus.getHand();
+								cards.add(deckOfCards.removeTop());
+								
+								if(checkBusted(cards)) {
+									mPlayerStatus.setBusted(true);
+									System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
+								" busted..., total = " + checkBustedValue(cards));
+
+								} else {
+									int total = countHandSoftTotal(cards);
+									System.out.println(DEALER_MESSAGE + "your current total value(soft) is " + total);
+								}
+								continue;
 							}
-   						}
+	   						System.out.println("decide whether to hit...");
+	   						boolean conti = mPlayer.hit_me(my_open, dealer_open, getTable(playerStatusArray));
+	   						if(!conti) {
+	   							mPlayerStatus.setStand(!conti);
+								System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
+								" stand...");
+	   						} else {
+	   							ArrayList<Card> cards = mPlayerStatus.getHand();
+								cards.add(deckOfCards.removeTop());
+								
+								if(checkBusted(cards)) {
+									mPlayerStatus.setBusted(true);
+									System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
+								" busted..., total = " + checkBustedValue(cards));
+
+								} else {
+									int total = countHandSoftTotal(cards);
+									System.out.println(DEALER_MESSAGE + "your current total value(soft) is " + total);
+								}
+	   						}
+						}
 					}
 				}
-				if(count == 4 + splitNum) {
+
+				if(count == CURRENT_N_PLAYERS + splitNum) {
+					System.out.println("|==============================================================|");			
 					System.out.println(DEALER_MESSAGE + "All players are done");
 					break;
 				}
 			}
 			// execute dealer actions:
 			System.out.println("|==============================================================|");
-			System.out.println(DEALER_MESSAGE + " dealer turns: ");
+			System.out.println(DEALER_MESSAGE + "dealer turns: ");
 
 			// Flip up (open) the face-down card.
 			Card facedown = Dealer.getHand().get(0);
 			Card faceup = Dealer.getHand().get(1);
-			System.out.println(DEALER_MESSAGE + " flip up the face-down card... ");
-			System.out.println(DEALER_MESSAGE + "Suit: " + facedown.getSuit() + "; Value: " + facedown.getValue());
+			System.out.println(DEALER_MESSAGE + "flip up the face-down card... ");
+			System.out.println(DEALER_MESSAGE + "Suit: " + suit[facedown.getSuit() - 1] + "; Value: " + rank[facedown.getValue() - 1]);
 
 			boolean blackjack = false;
 			if(countHandSoftTotal(Dealer.getHand()) == 21) {
 				blackjack = true;
 				Dealer.setBlackjack(blackjack);
-				System.out.println(DEALER_MESSAGE + " Got a BLACKJACK!, set stand = true");
-				Dealer.setStand(true);
+				System.out.println(DEALER_MESSAGE + " Got a BLACKJACK!, set blackjack = true");
+				// Dealer.setStand(true);
 			}
 			// If the total card value is ≤ 16 or is a soft-17, hit.
 			while(true) {
@@ -497,7 +507,7 @@ public class POOCasino {
 				} else {
 					// Otherwise, stand.
 					int total = countHandSoftTotal(cards);
-					System.out.println(DEALER_MESSAGE + "dealer's total value(soft) is >= 17, which is" + total);
+					System.out.println(DEALER_MESSAGE + "dealer's total value(soft) is >= 17, which is: " + total);
 					System.out.println(DEALER_MESSAGE + "Dealer stop hitting, stand");
 					break;
 				}
@@ -517,6 +527,8 @@ public class POOCasino {
 				Player mPlayer = players.get(i);
 				PlayerStatus mPlayerStatus = playerStatusArray.get(i);
 				double bet = (double)mPlayerStatus.getBet();
+				if(mPlayerStatus.getDoubledown())
+					bet *= 2;
 				
 				if(mPlayerStatus.getSplit()) {
 
@@ -537,23 +549,27 @@ public class POOCasino {
 						// CASE3. If player i gets a Blackjack, the player gets 3Bi/2 more chips 
 						// unless the dealer also gets a Blackjack.
 						// In the latter case, it is a “push” and the player just get 0 more chips.
-						if(mPlayerStatus.blackjackSplit[j]) {
+						else if(mPlayerStatus.blackjackSplit[j]) {
 							if(Dealer.getBlackjack())
 								try {
 									mPlayer.decrease_chips(0);
 								} catch(Exception e) {
-								System.out.println(e.toString());
+									System.out.println(e.toString());
 								}
 							else
 								try {
-									mPlayer.increase_chips((3 * bet)/ 2);
+									// mPlayer.increase_chips((3 * bet)/ 2);
+
+									//HOWEVER, blackjacks after a split are counted as
+									// non-blackjack 21 when comparing against the dealer's hand.
+									mPlayer.increase_chips(bet);
 								} catch(Exception e) {
-								System.out.println(e.toString());
+									System.out.println(e.toString());
 								}
 						}
 						
 						// CASE4. If player i doesn’t get a Blackjack, and if the dealer gets busted, each player gets Bi more chips
-						if(!mPlayerStatus.blackjackSplit[j] && Dealer.getBusted()) {
+						else if(!mPlayerStatus.blackjackSplit[j] && Dealer.getBusted()) {
 							try {
 								mPlayer.increase_chips(bet);
 							} catch(Exception e) {
@@ -563,7 +579,7 @@ public class POOCasino {
 						// CASE5. If player i doesn’t get a Blackjack, and if the dealer gets a Blackjack, 
 						// the bet Bi goes to the casino. If the player bought an insurance, 
 						// however, she/he gets Bi back from the insurance, making it even.
-						if(!mPlayerStatus.blackjackSplit[j] && Dealer.getBlackjack()) {
+						else if(!mPlayerStatus.blackjackSplit[j] && Dealer.getBlackjack()) {
 							if(mPlayerStatus.getInsurance())
 								try {
 									mPlayer.decrease_chips(0);
@@ -583,7 +599,7 @@ public class POOCasino {
 						// If the dealer gets more, the player loses and Bi goes to the casino. 
 						// If the player gets more, the player wins Bi more chips. 
 						// Otherwise it is a “push” and the player just get 0 more chips.
-						if(!mPlayerStatus.blackjackSplit[j] && !Dealer.getBlackjack()
+						else if(!mPlayerStatus.blackjackSplit[j] && !Dealer.getBlackjack()
 							&& !mPlayerStatus.bustedSplit[j] && !Dealer.getBusted()) {
 							int playerSum = countHandSoftTotal(hand);
 							int dealerSum = countHandSoftTotal(Dealer.getHand());
@@ -618,7 +634,7 @@ public class POOCasino {
 						}
 					}
 					// CASE2. If player i gets busted, Bi goes to the casino.
-					if(mPlayerStatus.getBusted()) {
+					else if(mPlayerStatus.getBusted()) {
 						try {
 							mPlayer.decrease_chips(bet);
 						} catch(Exception e) {
@@ -627,7 +643,7 @@ public class POOCasino {
 					}
 					// CASE3. If player i gets a Blackjack, the player gets 3Bi/2 more chips unless the dealer also gets a Blackjack.
 					// In the latter case, it is a “push” and the player just get 0 more chips.
-					if(mPlayerStatus.getBlackjack()) {
+					else if(mPlayerStatus.getBlackjack()) {
 						if(Dealer.getBlackjack())
 							try {
 								mPlayer.decrease_chips(0);
@@ -642,7 +658,7 @@ public class POOCasino {
 							}
 					}
 					// CASE4. If player i doesn’t get a Blackjack, and if the dealer gets busted, each player gets Bi more chips
-					if(!mPlayerStatus.getBlackjack() && Dealer.getBusted()) {
+					else if(!mPlayerStatus.getBlackjack() && Dealer.getBusted()) {
 						try {
 							mPlayer.increase_chips(bet);
 						} catch(Exception e) {
@@ -652,7 +668,7 @@ public class POOCasino {
 					// CASE5. If player i doesn’t get a Blackjack, and if the dealer gets a Blackjack, 
 					// the bet Bi goes to the casino. If the player bought an insurance, 
 					// however, she/he gets Bi back from the insurance, making it even.
-					if(!mPlayerStatus.getBlackjack() && Dealer.getBlackjack()) {
+					else if(!mPlayerStatus.getBlackjack() && Dealer.getBlackjack()) {
 						if(mPlayerStatus.getInsurance())
 							try {
 								mPlayer.decrease_chips(0);
@@ -672,7 +688,7 @@ public class POOCasino {
 					// If the dealer gets more, the player loses and Bi goes to the casino. 
 					// If the player gets more, the player wins Bi more chips. 
 					// Otherwise it is a “push” and the player just get 0 more chips.
-					if(!mPlayerStatus.getBlackjack() && !Dealer.getBlackjack()
+					else if(!mPlayerStatus.getBlackjack() && !Dealer.getBlackjack()
 						&& !mPlayerStatus.getBusted() && !Dealer.getBusted()) {
 
 						ArrayList<Card> hand = mPlayerStatus.getHand();
@@ -697,11 +713,9 @@ public class POOCasino {
 								System.out.println(e.toString());
 							}
 					}
-
-					CURRENT_N_ROUND++;
 				}
 			}
-
+			CURRENT_N_ROUND++;
 		}
 	}
 }

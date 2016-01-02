@@ -90,10 +90,10 @@ public class PlayerStatus {
 		return doubledown;
 	}
 	public void setBlackjack(boolean _blackjack) {
-		stand = _blackjack;
+		blackjack = _blackjack;
 	}
 	public boolean getBlackjack() {
-		return stand;
+		return blackjack;
 	}	
 	public String getName(){
 		return name;
