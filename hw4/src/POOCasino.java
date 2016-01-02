@@ -1,7 +1,7 @@
 import foop.*;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Collections;
+import java.lang.reflect.Constructor;
 
 public class POOCasino {
 	
@@ -37,20 +37,9 @@ public class POOCasino {
 		return current_table;
 	}
 
-	public static Comparator<Card> CardComparator = new Comparator<Card>() {
-
-		public int compare(Card b1, Card b2) {
-			if( b1.getValue() != b2.getValue() )
-				return b1.getValue() - b2.getValue();
-			else
-				return b1.getSuit() - b2.getSuit();
-		}
-	};
-
 	public static boolean checkBusted(ArrayList<Card> hand) {
 
 		int total = 0;
-		Collections.sort(hand, CardComparator);
 		for(int i = 0; i < hand.size(); i++) {
 			if(hand.get(i).getValue() > 10) // 11, 12, 13 for J,Q,K
 				total += 10;
@@ -65,7 +54,6 @@ public class POOCasino {
 	public static int checkBustedValue(ArrayList<Card> hand) {
 
 		int total = 0;
-		Collections.sort(hand, CardComparator);
 		for(int i = 0; i < hand.size(); i++) {
 			if(hand.get(i).getValue() > 10) // 11, 12, 13 for J,Q,K
 				total += 10;
@@ -77,12 +65,18 @@ public class POOCasino {
 	public static int countHandSoftTotal(ArrayList<Card> hand) {
 
 		int total = 0;
-		Collections.sort(hand, CardComparator);
 		int numOfAce = 0;
+		int size = hand.size();
 
-		for(int i = 0 ; i < hand.size(); i++) {
-			if(hand.get(i).getValue() == 1)
+		for(int i = 0 ; i < size; i++) {
+			if(hand.get(i).getValue() == 1) {
+				// move ACE to front
 				numOfAce++;
+				Card ace = hand.get(i);
+				hand.remove(i);
+				hand.trimToSize();
+				hand.add(0, ace);
+			}
 		}
 		if(numOfAce == 0) {
 			
@@ -144,13 +138,17 @@ public class POOCasino {
 		for(int i = 2; i < args.length; i++) {
 
 			// yours as Player1 and Player3 and his/hers as Player2 and Player4
+			// DEBUG: 
 			// players.add(new PlayerHuman(N_CHIP));
-			if(i % 2 == 0)
-				players.add(new PlayerB03901023(N_CHIP));
-			else 
-				// players.add(new PlayerB03901023(N_CHIP));
-				players.add(new PlayerB03902039(N_CHIP));
 
+			try {
+
+				Constructor c = Class.forName(args[i]).getConstructor(Integer.TYPE);
+				Player foo = (Player) c.newInstance(N_CHIP);
+				players.add(foo);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			playerStatusArray.add(new PlayerStatus(args[i]));
 			N_PLAYERS++;
 		}
