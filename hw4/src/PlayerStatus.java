@@ -24,7 +24,7 @@ public class PlayerStatus {
 	public void setInsurance(boolean buy) {
 		insurance = buy;
 	}
-	public boolean getInsurence() {
+	public boolean getInsurance() {
 		return insurance;
 	}
 	public void setSurrender(boolean _surrender) {
