@@ -144,8 +144,14 @@ public class POOCasino {
 
 		for(int i = 2; i < args.length; i++) {
 
-			// players.add(new Player1());
-			players.add(new PlayerB03901023(N_CHIP));
+			// yours as Player1 and Player3 and his/hers as Player2 and Player4
+			// players.add(new PlayerHuman(N_CHIP));
+			if(i % 2 == 0)
+				players.add(new PlayerB03901023(N_CHIP));
+			else 
+				players.add(new PlayerB03901023(N_CHIP));
+				// players.add(new Player1(N_CHIP));
+
 			playerStatusArray.add(new PlayerStatus(args[i]));
 			N_PLAYERS++;
 		}
@@ -178,6 +184,7 @@ public class POOCasino {
 			for(int i = 0; i < N_PLAYERS; i++) {
 				int bet = players.get(i).make_bet(getTable(playerStatusArray), CURRENT_N_PLAYERS, i);
 				playerStatusArray.get(i).setBet(bet);
+				System.out.println(DEALER_MESSAGE + playerStatusArray.get(i).getName() + " bet for " + bet + " $...");
 			}
 
 			for(int i = 0; i < CURRENT_N_PLAYERS; i++) {
@@ -220,7 +227,8 @@ public class POOCasino {
 			Dealer.getHand().add(deckOfCards.removeTop());
 			// Dealer.getHand().add(new Card((byte)1, (byte)1));
 
-			System.out.println(DEALER_MESSAGE + "Dealer face-up card value: " + Dealer.getHand().get(1).getValue());
+			System.out.println(DEALER_MESSAGE + "flip up the face-up card... ");
+			System.out.println(DEALER_MESSAGE + "Suit: " + suit[Dealer.getHand().get(1).getSuit() - 1] + "; Value: " + rank[Dealer.getHand().get(1).getValue() - 1]);
 
 			// check insurance
 			if(Dealer.faceupCardIsAce()) {
@@ -236,7 +244,6 @@ public class POOCasino {
 					Card dealer_open = Dealer.getHand().get(1);
 					boolean buy = players.get(i).buy_insurance(my_open, dealer_open, getTable(playerStatusArray));
 					playerStatusArray.get(i).setInsurance(buy);
-					playerStatusArray.get(i).setSurrender(false);
 				}
 			} else {
 				System.out.println(DEALER_MESSAGE + "face-up card is not ACE... continue");
@@ -249,7 +256,6 @@ public class POOCasino {
 					
 					boolean sur = players.get(i).do_surrender(my_open, dealer_open, getTable(playerStatusArray));
 					playerStatusArray.get(i).setSurrender(sur);
-					playerStatusArray.get(i).setInsurance(false);
 				}
 			}
 			int splitNum = 0;
@@ -325,9 +331,7 @@ public class POOCasino {
 						if(doubledown)
 							mPlayerStatus.setBet(mPlayerStatus.getBet() * 2);
 					} else {
-						System.out.println("|==============================================================|");
-   						System.out.println(DEALER_MESSAGE + 
-   							"do split( or get Blackjack ) and then double down is not allowed"); 
+   						System.out.println("Do split( or get Blackjack ) and then double down is not allowed"); 
 					}
 				}			
 			}
@@ -355,7 +359,7 @@ public class POOCasino {
 									": (HAND"+ j + ")has already BLACKJACK, total = " + countHandSoftTotal(hand));
 								count++;
 							}
-							if(mPlayerStatus.standSplit[j]) {
+							else if(mPlayerStatus.standSplit[j]) {
 								System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
 									": (HAND"+ j + ")has already stand, total = " + checkBustedValue(hand));
 								count++;
@@ -503,11 +507,15 @@ public class POOCasino {
 			while(true) {
 				ArrayList<Card> cards = Dealer.getHand();
 				if(countHandSoftTotal(cards) <= 17) {
+					System.out.println(DEALER_MESSAGE + "dealer's total value(soft) is " + countHandSoftTotal(cards) + " <= soft-17, hit...");
 					cards.add(deckOfCards.removeTop());
+					Card card = cards.get(cards.size() - 1);
+					System.out.println(DEALER_MESSAGE + "Suit: " + suit[card.getSuit() - 1] + "; Value: " + rank[card.getValue() - 1]);
+
 				} else {
 					// Otherwise, stand.
 					int total = countHandSoftTotal(cards);
-					System.out.println(DEALER_MESSAGE + "dealer's total value(soft) is >= 17, which is: " + total);
+					System.out.println(DEALER_MESSAGE + "dealer's total value(soft) is " + total + " > 17");
 					System.out.println(DEALER_MESSAGE + "Dealer stop hitting, stand");
 					break;
 				}
@@ -527,8 +535,6 @@ public class POOCasino {
 				Player mPlayer = players.get(i);
 				PlayerStatus mPlayerStatus = playerStatusArray.get(i);
 				double bet = (double)mPlayerStatus.getBet();
-				if(mPlayerStatus.getDoubledown())
-					bet *= 2;
 				
 				if(mPlayerStatus.getSplit()) {
 
@@ -541,9 +547,11 @@ public class POOCasino {
 						// CASE2. If player i gets busted, Bi goes to the casino.
 						if(mPlayerStatus.bustedSplit[j]) {
 							try {
+								
 								mPlayer.decrease_chips(bet);
 							} catch(Exception e) {
-								System.out.println(e.toString());
+								e.printStackTrace();
+								System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 							}
 						}
 						// CASE3. If player i gets a Blackjack, the player gets 3Bi/2 more chips 
@@ -552,9 +560,11 @@ public class POOCasino {
 						else if(mPlayerStatus.blackjackSplit[j]) {
 							if(Dealer.getBlackjack())
 								try {
+									
 									mPlayer.decrease_chips(0);
 								} catch(Exception e) {
-									System.out.println(e.toString());
+									e.printStackTrace();
+									System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 								}
 							else
 								try {
@@ -562,18 +572,22 @@ public class POOCasino {
 
 									//HOWEVER, blackjacks after a split are counted as
 									// non-blackjack 21 when comparing against the dealer's hand.
+									
 									mPlayer.increase_chips(bet);
 								} catch(Exception e) {
-									System.out.println(e.toString());
+									e.printStackTrace();
+									System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 								}
 						}
 						
 						// CASE4. If player i doesn’t get a Blackjack, and if the dealer gets busted, each player gets Bi more chips
 						else if(!mPlayerStatus.blackjackSplit[j] && Dealer.getBusted()) {
 							try {
+								
 								mPlayer.increase_chips(bet);
 							} catch(Exception e) {
-								System.out.println(e.toString());
+								e.printStackTrace();
+								System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 							}
 						}
 						// CASE5. If player i doesn’t get a Blackjack, and if the dealer gets a Blackjack, 
@@ -582,15 +596,19 @@ public class POOCasino {
 						else if(!mPlayerStatus.blackjackSplit[j] && Dealer.getBlackjack()) {
 							if(mPlayerStatus.getInsurance())
 								try {
+									
 									mPlayer.decrease_chips(0);
 								} catch(Exception e) {
-									System.out.println(e.toString());
+									e.printStackTrace();
+									System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 								}
 							else
 								try {
+									
 									mPlayer.decrease_chips(bet);
 								} catch(Exception e) {
-									System.out.println(e.toString());
+									e.printStackTrace();
+									System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 								}
 						}
 						// CASE6. Finally, if neither player i nor the dealer gets a Blackjack, 
@@ -605,21 +623,27 @@ public class POOCasino {
 							int dealerSum = countHandSoftTotal(Dealer.getHand());
 							if(dealerSum > playerSum)
 								try {
+									
 									mPlayer.decrease_chips(bet);
 								} catch(Exception e) {
-									System.out.println(e.toString());
+									e.printStackTrace();
+									System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 								}
 							else if(dealerSum < playerSum)
 								try {
+									
 									mPlayer.increase_chips(bet);
 								} catch(Exception e) {
-									System.out.println(e.toString());
+									e.printStackTrace();
+									System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 								}
 							else
 								try {
+									
 									mPlayer.decrease_chips(0);
 								} catch(Exception e) {
-									System.out.println(e.toString());
+									e.printStackTrace();
+									System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 								}
 						}
 					}
@@ -628,17 +652,21 @@ public class POOCasino {
 					// CASE1. If player i surrenders, 1Bi/2 goes to the casino.
 					if(mPlayerStatus.getSurrender()) {
 						try {
+							
 							mPlayer.decrease_chips(bet / 2);
 						} catch(Exception e) {
-							System.out.println(e.toString());
+							e.printStackTrace();
+							System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 						}
 					}
 					// CASE2. If player i gets busted, Bi goes to the casino.
 					else if(mPlayerStatus.getBusted()) {
 						try {
+							
 							mPlayer.decrease_chips(bet);
 						} catch(Exception e) {
-							System.out.println(e.toString());
+							e.printStackTrace();
+							System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 						}
 					}
 					// CASE3. If player i gets a Blackjack, the player gets 3Bi/2 more chips unless the dealer also gets a Blackjack.
@@ -646,23 +674,29 @@ public class POOCasino {
 					else if(mPlayerStatus.getBlackjack()) {
 						if(Dealer.getBlackjack())
 							try {
+								
 								mPlayer.decrease_chips(0);
 							} catch(Exception e) {
-								System.out.println(e.toString());
+								e.printStackTrace();
+								System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 							}
 						else
 							try {
+								
 								mPlayer.increase_chips((3 * bet) / 2);
 							} catch(Exception e) {
-								System.out.println(e.toString());
+								e.printStackTrace();
+								System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 							}
 					}
 					// CASE4. If player i doesn’t get a Blackjack, and if the dealer gets busted, each player gets Bi more chips
 					else if(!mPlayerStatus.getBlackjack() && Dealer.getBusted()) {
 						try {
+							
 							mPlayer.increase_chips(bet);
 						} catch(Exception e) {
-							System.out.println(e.toString());
+							e.printStackTrace();
+							System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 						}
 					}
 					// CASE5. If player i doesn’t get a Blackjack, and if the dealer gets a Blackjack, 
@@ -671,15 +705,19 @@ public class POOCasino {
 					else if(!mPlayerStatus.getBlackjack() && Dealer.getBlackjack()) {
 						if(mPlayerStatus.getInsurance())
 							try {
+								
 								mPlayer.decrease_chips(0);
 							} catch(Exception e) {
-								System.out.println(e.toString());
+								e.printStackTrace();
+								System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 							}
 						else
 							try {
+								
 								mPlayer.decrease_chips(bet);
 							} catch(Exception e) {
-								System.out.println(e.toString());
+								e.printStackTrace();
+								System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 							}
 					}
 					// CASE6. Finally, if neither player i nor the dealer gets a Blackjack, 
@@ -696,26 +734,41 @@ public class POOCasino {
 						int dealerSum = countHandSoftTotal(Dealer.getHand());
 						if(dealerSum > playerSum)
 							try {
+								
 								mPlayer.decrease_chips(bet);
 							} catch(Exception e) {
-								System.out.println(e.toString());
+								e.printStackTrace();
+								System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 							}
 						else if(dealerSum < playerSum)
 							try {
+								
 								mPlayer.increase_chips(bet);
 							} catch(Exception e) {
-								System.out.println(e.toString());
+								e.printStackTrace();
+								System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 							}
 						else
 							try {
+								
 								mPlayer.decrease_chips(0);
 							} catch(Exception e) {
-								System.out.println(e.toString());
+								e.printStackTrace();
+								System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 							}
 					}
 				}
 			}
 			CURRENT_N_ROUND++;
 		}
+
+		System.out.println("|==============================================================|");
+		System.out.println(SYSTEM_MESSAGE + "POOCasino BlackJack TERMINATES SUCCESSFULLY");
+		System.out.println(SYSTEM_MESSAGE + "NUMBER OF PLAYERS: " + CURRENT_N_PLAYERS + "/" + N_PLAYERS);
+		System.out.println("|==============================================================|");
+
+		for(int i = 0; i < CURRENT_N_PLAYERS; i++)
+			System.out.println(players.get(i).toString());
+
 	}
 }

@@ -1,5 +1,4 @@
 import foop.*;
-import java.util.Scanner;
 import java.util.ArrayList;
 
 public class PlayerB03901023 extends Player {
@@ -16,85 +15,107 @@ public class PlayerB03901023 extends Player {
            int total_player,
            int my_position){
 
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("Please enter your bet: ");
-		int bet = scanner.nextInt();
+		if(get_chips() <= 0)
+			return 0;
 
-		while( (bet * 2.5)  >= get_chips()) {
-			
-			scanner = new Scanner(System.in);
-			System.out.println("Please enter your bet again");
-			bet = scanner.nextInt();
-		}
-
-		return bet;
+		double bet = get_chips() * 0.4 * Math.random();
+	
+		return (int)bet;
 	}
 	public boolean buy_insurance(Card my_open,
                     Card dealer_open,
                     ArrayList<Hand> current_table){
 		
 		//dealer_open must be ACE
-		Scanner scanner = new Scanner(System.in);
-		System.out.print("Please enter 1 for YES or 0 for NO: ");
-		int buy = scanner.nextInt();
+		System.out.print("Please enter YES or NO: ");
+		// 0 to 1
+		double buy = Math.random();
 
-		if(buy == 1)
+		if(buy >= 0.5) {
+			System.out.println("YES");
 			return true;
-		else
+		}
+		else{
+			System.out.println("NO");
 			return false;
+		}
 	}
 	public boolean do_surrender(Card my_open,
                    Card dealer_open,
                    ArrayList<Hand> current_table){
 
-		Scanner scanner = new Scanner(System.in);
-		System.out.print("Please enter 1 for YES or 0 for NO: ");
-		int sur = scanner.nextInt();
+		System.out.print("Please enter YES or NO: ");
+		// 0 to 1
+		double var = Math.random();
 
-		if(sur == 1)
+		if(var >= 0.85) {
+			System.out.println("YES");
 			return true;
-		else
+		}
+		else{
+			System.out.println("NO");
 			return false;
+		}
 	}
 
 	public boolean do_split(ArrayList<Card> my_open,
                Card dealer_open,
                ArrayList<Hand> current_table){
 		
-		Scanner scanner = new Scanner(System.in);
-		System.out.print("Please enter 1 for YES or 0 for NO: ");
-		int split = scanner.nextInt();
+		System.out.print("Please enter YES or NO: ");
+		// 0 to 1
+		double var = Math.random();
+		ArrayList<Card> hand = my_open;
+		int total = POOCasino.countHandSoftTotal(hand);
 
-		if(split == 1)
+
+		if(var >= 0.5 || total == 20) { // K, K or J, J...etc
+			System.out.println("YES");
 			return true;
-		else
+		}
+		else{
+			System.out.println("NO");
 			return false;
+		}
 	}
 	public boolean do_double(Hand my_open,
                 Card dealer_open,
                 ArrayList<Hand> current_table){
 		
-		Scanner scanner = new Scanner(System.in);
-		System.out.print("Please enter 1 for YES or 0 for NO: ");
-		int dou = scanner.nextInt();
+		System.out.print("Please enter YES or NO: ");
+		// 0 to 1
+		double var = Math.random();
+		ArrayList<Card> hand = my_open.getCards();
+		int total = POOCasino.countHandSoftTotal(hand);
 
-		if(dou == 1)
+		if(var >= 0.5 || (total < 15 && total > 11)) {
+			System.out.println("YES");
 			return true;
-		else
+		}
+		else{
+			System.out.println("NO");
 			return false;
+		}
 	}
 	public boolean hit_me(Hand my_open,
              Card dealer_open,
              ArrayList<Hand> current_table){
 		
-		Scanner scanner = new Scanner(System.in);
-		System.out.print("Please enter 1 for YES or 0 for NO: ");
-		int hit = scanner.nextInt();
 
-		if(hit == 1)
+		System.out.print("Please enter YES or NO: ");
+		// 0 to 1
+		double var = Math.random();
+		ArrayList<Card> hand = my_open.getCards();
+		int total = POOCasino.countHandSoftTotal(hand);
+
+		if(var >= 0.5 || total < 11) {
+			System.out.println("YES");
 			return true;
-		else
+		}
+		else{
+			System.out.println("NO");
 			return false;
+		}
 	}
  //    public final void decrease_chips(double diff)
  //                          throws Player.NegativeException,
@@ -109,11 +130,11 @@ public class PlayerB03901023 extends Player {
   	public String toString() {
 
   		String result = "";
-  		result += "|================PlayerB03901023 CURRENT STATUS================|\n";
-  		result += "|	@ PLAYER NAME: Adrian Hsu\n";
-  		result += "|	@ CURRENT NUMBER OF CHIPS: " + get_chips() + "\n";
-		result += "|==============================================================|\n";
-
+  		// result += "|================PlayerB03901023 CURRENT STATUS================|\n";
+  		// result += "|	@ PLAYER NAME: ADRIAN_HSU\n";
+  		// result += "|	@ CURRENT NUMBER OF CHIPS: " + get_chips() + "\n";
+		// result += "|==============================================================|\n";
+  		result += get_chips();
   		return result;
   	}
 }
