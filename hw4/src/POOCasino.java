@@ -582,8 +582,11 @@ public class POOCasino {
 								}
 							} else {
 								try {
-								
-									mPlayer.decrease_chips((3 * bet) / 2);
+									//HOWEVER, blackjacks after a split are counted as
+									// non-blackjack 21 when comparing against the dealer's hand.
+									
+									mPlayer.increase_chips(bet);
+									// mPlayer.increase_chips((3 * bet) / 2);
 								} catch(Exception e) {
 									e.printStackTrace();
 									System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
@@ -698,7 +701,7 @@ public class POOCasino {
 						} else {
 							try {
 							
-								mPlayer.decrease_chips((3 * bet) / 2);
+								mPlayer.increase_chips((3 * bet) / 2);
 							} catch(Exception e) {
 								e.printStackTrace();
 								System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
