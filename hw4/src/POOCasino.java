@@ -519,30 +519,54 @@ public class POOCasino {
 
 						// CASE2. If player i gets busted, Bi goes to the casino.
 						if(mPlayerStatus.bustedSplit[j]) {
-							mPlayer.decrease_chips(bet);
+							try {
+								mPlayer.decrease_chips(bet);
+							} catch(Exception e) {
+								System.out.println(e.toString());
+							}
 						}
 						// CASE3. If player i gets a Blackjack, the player gets 3Bi/2 more chips 
 						// unless the dealer also gets a Blackjack.
 						// In the latter case, it is a “push” and the player just get 0 more chips.
 						if(mPlayerStatus.blackjackSplit[j]) {
 							if(Dealer.getBlackjack())
-								mPlayer.decrease_chips(0);
+								try {
+									mPlayer.decrease_chips(0);
+								} catch(Exception e) {
+								System.out.println(e.toString());
+								}
 							else
-								mPlayer.increase_chips((3 * bet)/ 2);
+								try {
+									mPlayer.increase_chips((3 * bet)/ 2);
+								} catch(Exception e) {
+								System.out.println(e.toString());
+								}
 						}
 						
 						// CASE4. If player i doesn’t get a Blackjack, and if the dealer gets busted, each player gets Bi more chips
 						if(!mPlayerStatus.blackjackSplit[j] && Dealer.getBusted()) {
-							mPlayer.increase_chips(bet);
+							try {
+								mPlayer.increase_chips(bet);
+							} catch(Exception e) {
+								System.out.println(e.toString());
+							}
 						}
 						// CASE5. If player i doesn’t get a Blackjack, and if the dealer gets a Blackjack, 
 						// the bet Bi goes to the casino. If the player bought an insurance, 
 						// however, she/he gets Bi back from the insurance, making it even.
 						if(!mPlayerStatus.blackjackSplit[j] && Dealer.getBlackjack()) {
 							if(mPlayerStatus.getInsurance())
-								mPlayer.decrease_chips(0);
+								try {
+									mPlayer.decrease_chips(0);
+								} catch(Exception e) {
+									System.out.println(e.toString());
+								}
 							else
-								mPlayer.decrease_chips(bet);
+								try {
+									mPlayer.decrease_chips(bet);
+								} catch(Exception e) {
+									System.out.println(e.toString());
+								}
 						}
 						// CASE6. Finally, if neither player i nor the dealer gets a Blackjack, 
 						// and neither of them gets busted, the sum of face values on the 
@@ -555,43 +579,83 @@ public class POOCasino {
 							int playerSum = countHandSoftTotal(hand);
 							int dealerSum = countHandSoftTotal(Dealer.getHand());
 							if(dealerSum > playerSum)
-								mPlayer.decrease_chips(bet);
+								try {
+									mPlayer.decrease_chips(bet);
+								} catch(Exception e) {
+									System.out.println(e.toString());
+								}
 							else if(dealerSum < playerSum)
-								mPlayer.increase_chips(bet);
+								try {
+									mPlayer.increase_chips(bet);
+								} catch(Exception e) {
+									System.out.println(e.toString());
+								}
 							else
-								mPlayer.decrease_chips(0);
+								try {
+									mPlayer.decrease_chips(0);
+								} catch(Exception e) {
+									System.out.println(e.toString());
+								}
 						}
 					}
 				} else {
 
 					// CASE1. If player i surrenders, 1Bi/2 goes to the casino.
 					if(mPlayerStatus.getSurrender()) {
-						mPlayer.decrease_chips(bet / 2);
+						try {
+							mPlayer.decrease_chips(bet / 2);
+						} catch(Exception e) {
+							System.out.println(e.toString());
+						}
 					}
 					// CASE2. If player i gets busted, Bi goes to the casino.
 					if(mPlayerStatus.getBusted()) {
-						mPlayer.decrease_chips(bet);
+						try {
+							mPlayer.decrease_chips(bet);
+						} catch(Exception e) {
+							System.out.println(e.toString());
+						}
 					}
 					// CASE3. If player i gets a Blackjack, the player gets 3Bi/2 more chips unless the dealer also gets a Blackjack.
 					// In the latter case, it is a “push” and the player just get 0 more chips.
 					if(mPlayerStatus.getBlackjack()) {
 						if(Dealer.getBlackjack())
-							mPlayer.decrease_chips(0);
+							try {
+								mPlayer.decrease_chips(0);
+							} catch(Exception e) {
+								System.out.println(e.toString());
+							}
 						else
-							mPlayer.increase_chips((3 * bet) / 2);
+							try {
+								mPlayer.increase_chips((3 * bet) / 2);
+							} catch(Exception e) {
+								System.out.println(e.toString());
+							}
 					}
 					// CASE4. If player i doesn’t get a Blackjack, and if the dealer gets busted, each player gets Bi more chips
 					if(!mPlayerStatus.getBlackjack() && Dealer.getBusted()) {
-						mPlayer.increase_chips(bet);
+						try {
+							mPlayer.increase_chips(bet);
+						} catch(Exception e) {
+							System.out.println(e.toString());
+						}
 					}
 					// CASE5. If player i doesn’t get a Blackjack, and if the dealer gets a Blackjack, 
 					// the bet Bi goes to the casino. If the player bought an insurance, 
 					// however, she/he gets Bi back from the insurance, making it even.
 					if(!mPlayerStatus.getBlackjack() && Dealer.getBlackjack()) {
 						if(mPlayerStatus.getInsurance())
-							mPlayer.decrease_chips(0);
+							try {
+								mPlayer.decrease_chips(0);
+							} catch(Exception e) {
+								System.out.println(e.toString());
+							}
 						else
-							mPlayer.decrease_chips(bet);
+							try {
+								mPlayer.decrease_chips(bet);
+							} catch(Exception e) {
+								System.out.println(e.toString());
+							}
 					}
 					// CASE6. Finally, if neither player i nor the dealer gets a Blackjack, 
 					// and neither of them gets busted, the sum of face values on the 
@@ -606,11 +670,23 @@ public class POOCasino {
 						int playerSum = countHandSoftTotal(hand);
 						int dealerSum = countHandSoftTotal(Dealer.getHand());
 						if(dealerSum > playerSum)
-							mPlayer.decrease_chips(bet);
+							try {
+								mPlayer.decrease_chips(bet);
+							} catch(Exception e) {
+								System.out.println(e.toString());
+							}
 						else if(dealerSum < playerSum)
-							mPlayer.increase_chips(bet);
+							try {
+								mPlayer.increase_chips(bet);
+							} catch(Exception e) {
+								System.out.println(e.toString());
+							}
 						else
-							mPlayer.decrease_chips(0);
+							try {
+								mPlayer.decrease_chips(0);
+							} catch(Exception e) {
+								System.out.println(e.toString());
+							}
 					}
 				}
 			}
