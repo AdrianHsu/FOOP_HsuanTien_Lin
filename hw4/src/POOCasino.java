@@ -537,6 +537,15 @@ public class POOCasino {
 				// NegativeException Will not happened since bet >= 0 
 				double bet = (double)mPlayerStatus.getBet();
 				
+				// Buy Insurance will decrease bet / 2 immediately
+				if(mPlayerStatus.getInsurance())
+					try {	
+						mPlayer.decrease_chips(bet / 2);
+					} catch(Exception e) {
+						e.printStackTrace();
+						System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
+					}
+
 				if(mPlayerStatus.getSplit()) {
 
 					for(int j = 0; j < 2; j++) {
@@ -559,29 +568,30 @@ public class POOCasino {
 						// unless the dealer also gets a Blackjack.
 						// In the latter case, it is a “push” and the player just get 0 more chips.
 						else if(mPlayerStatus.blackjackSplit[j]) {
-							if(Dealer.getBlackjack())
-								try {
-									
-									mPlayer.decrease_chips(0);
-								} catch(Exception e) {
-									e.printStackTrace();
-									System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
-								}
-							else
-								try {
-									// mPlayer.increase_chips((3 * bet)/ 2);
+							if(Dealer.getBlackjack()) {
 
-									//HOWEVER, blackjacks after a split are counted as
-									// non-blackjack 21 when comparing against the dealer's hand.
-									
-									mPlayer.increase_chips(bet);
+								try {
+									if(mPlayerStatus.getInsurance()) {
+										mPlayer.increase_chips(bet);
+									} else {
+										mPlayer.increase_chips(0);
+									}
 								} catch(Exception e) {
 									e.printStackTrace();
 									System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 								}
+							} else {
+								try {
+								
+									mPlayer.decrease_chips((3 * bet) / 2);
+								} catch(Exception e) {
+									e.printStackTrace();
+									System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
+								}
+							}
 						}
 						// CASE4. If player i doesn’t get a Blackjack, and if the dealer gets busted, each player gets Bi more chips
-						else if(!mPlayerStatus.blackjackSplit[j] && !mPlayerStatus.getBusted() && Dealer.getBusted()) {
+						else if(!mPlayerStatus.blackjackSplit[j] && Dealer.getBusted()) {
 							try {
 								
 								mPlayer.increase_chips(bet);
@@ -659,8 +669,9 @@ public class POOCasino {
 							System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 						}
 					}
+
 					// CASE2. If player i gets busted, Bi goes to the casino.
-					else if(mPlayerStatus.getBusted()) {
+					if(mPlayerStatus.getBusted()) {
 						try {
 							
 							mPlayer.decrease_chips(bet);
@@ -672,25 +683,30 @@ public class POOCasino {
 					// CASE3. If player i gets a Blackjack, the player gets 3Bi/2 more chips unless the dealer also gets a Blackjack.
 					// In the latter case, it is a “push” and the player just get 0 more chips.
 					else if(mPlayerStatus.getBlackjack()) {
-						if(Dealer.getBlackjack())
+						if(Dealer.getBlackjack()) {
+
 							try {
-								
-								mPlayer.decrease_chips(0);
+								if(mPlayerStatus.getInsurance()) {
+									mPlayer.increase_chips(bet);
+								} else {
+									mPlayer.increase_chips(0);
+								}
 							} catch(Exception e) {
 								e.printStackTrace();
 								System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 							}
-						else
+						} else {
 							try {
-								
-								mPlayer.increase_chips((3 * bet) / 2);
+							
+								mPlayer.decrease_chips((3 * bet) / 2);
 							} catch(Exception e) {
 								e.printStackTrace();
 								System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 							}
+						}
 					}
 					// CASE4. If player i doesn’t get a Blackjack, and if the dealer gets busted, each player gets Bi more chips
-					else if(!mPlayerStatus.getBlackjack() && !mPlayerStatus.getBusted() && Dealer.getBusted()) {
+					else if(!mPlayerStatus.getBlackjack() && Dealer.getBusted()) {
 						try {
 							
 							mPlayer.increase_chips(bet);
