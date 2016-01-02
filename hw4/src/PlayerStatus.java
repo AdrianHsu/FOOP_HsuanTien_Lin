@@ -62,6 +62,12 @@ public class PlayerStatus {
 	public boolean getDoubledown() {
 		return doubledown;
 	}
+	public void setBlackjack(boolean _blackjack) {
+		stand = _blackjack;
+	}
+	public boolean getBlackjack() {
+		return stand;
+	}	
 	public String getName(){
 		return name;
 	}
@@ -71,7 +77,19 @@ public class PlayerStatus {
 		else 
 			return null;
 	}
+  	public String toString(ArrayList<Card> hand) {
 
+  		String result = "";
+  		result += "|========================CARDS IN HAND=========================|\n";
+  		for(int i = 0; i < hand.size(); i++) {
+  			Card card = hand.get(i);
+			System.out.println("Card" + i + " Suit: " + card.getSuit() + "; Value: " + card.getValue());
+  		}
+		result += "|==============================================================|\n";
+
+  		return result;
+  	}
+	private boolean blackjack;
 	private boolean doubledown;
 	private boolean split;
 	private boolean stand;

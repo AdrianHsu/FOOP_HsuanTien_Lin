@@ -269,8 +269,16 @@ public class POOCasino {
 						mPlayerStatus.setSplit(split);
 						// Re-splitting is not allowed.
 					}
+
+					boolean blackjack = false;
+					if(countHandSoftTotal(mPlayerStatus.getHand()) == 21) {
+						blackjack = true;
+						mPlayerStatus.setBlackjack(blackjack);
+						System.out.println("You got a BLACKJACK!, set stand = true");
+						mPlayerStatus.setStand(true);
+					}
 					// Decide whether to double down.
-					if(!split) {
+					if( !split && !blackjack ) {
 						System.out.println("Decide whether to double down...");
 						
 						Hand my_open = new Hand( mPlayerStatus.getHand() );
@@ -281,13 +289,16 @@ public class POOCasino {
 						if(doubledown)
 							mPlayerStatus.setBet(mPlayerStatus.getBet() * 2);
 					} else {
-   						System.out.println(DEALER_MESSAGE + "do split and then double down is not allowed..."); 
+   						System.out.println(DEALER_MESSAGE + 
+   							"do split( or get Blackjack ) and then double down is not allowed"); 
 					}
 				}			
 			}
 			// Decide whether to hit, until a standing decision or busted, of course.
+			boolean checkDoubledown = false;
 			while(true) {
 				
+				int count = 0;
 				for(int i = 0; i < CURRENT_N_PLAYERS; i++) {
 
 					Player mPlayer = players.get(i);
@@ -295,19 +306,50 @@ public class POOCasino {
 					System.out.println("|==============================================================|");
 					System.out.println(DEALER_MESSAGE + playerStatusArray.get(i).getName() + " turns: ");
 
-					if(mPlayerStatus.getSurrender())
+					if(mPlayerStatus.getSurrender()) {
 						System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
 							": has already surrendered");
-					else if(mPlayerStatus.getStand())
+						count++;
+					}
+					else if(mPlayerStatus.getStand()) {
 						System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
-							": has already stand");
-					else if(mPlayerStatus.getBusted())
+							": has already stand, total = " + checkBustedValue(mPlayerStatus.getHand()));
+						count++;
+					}
+					else if(mPlayerStatus.getBusted() && !mPlayerStatus.getDoubledown()) {
 						System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
 							": has already busted, total = " + checkBustedValue(mPlayerStatus.getHand()));
+						count++;
+					}
+					else if(mPlayerStatus.getDoubledown() && checkDoubledown) {
+						System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
+							": has already stand for it's a doubledown, total = " + checkBustedValue(mPlayerStatus.getHand()));
+						count++;
+					}
 					else {
 						
 						Hand my_open = new Hand( mPlayerStatus.getHand() );
 						Card dealer_open = Dealer.getHand().get(1);
+   						
+						if(mPlayerStatus.getDoubledown()) {
+
+	   						System.out.println("doubledown, must hit one card");
+
+							ArrayList<Card> cards = mPlayerStatus.getHand();
+							cards.add(deckOfCards.removeTop());
+							
+							if(checkBusted(cards)) {
+								mPlayerStatus.setBusted(true);
+								System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
+							" busted..., total = " + checkBustedValue(cards));
+
+							} else {
+								int total = countHandSoftTotal(cards);
+								System.out.println(DEALER_MESSAGE + "your current total value(soft) is " + total);
+							}
+							checkDoubledown = true;
+							continue;
+						}
    						System.out.println("decide whether to hit...");
    						boolean conti = mPlayer.hit_me(my_open, dealer_open, getTable(playerStatusArray));
    						if(!conti) {
@@ -330,8 +372,11 @@ public class POOCasino {
    						}
 					}
 				}
+				if(count == 4) {
+					System.out.println(DEALER_MESSAGE + "All players are done");
+					break;
+				}
 			}
 		}
-
 	}
 }
