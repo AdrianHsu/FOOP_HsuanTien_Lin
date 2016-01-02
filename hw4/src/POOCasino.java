@@ -232,6 +232,7 @@ public class POOCasino {
 					playerStatusArray.get(i).setInsurance(false);
 				}
 			}
+			int splitNum = 0;
 			// first deal
 			for(int i = 0; i < CURRENT_N_PLAYERS; i++) {
 
@@ -267,6 +268,9 @@ public class POOCasino {
 						// If splitting, the player goes with two separate hands and continues
 						// the game with the decisions below.
 						mPlayerStatus.setSplit(split);
+						if(split)
+							splitNum++;
+
 						// Re-splitting is not allowed.
 					}
 
@@ -306,6 +310,64 @@ public class POOCasino {
 					System.out.println("|==============================================================|");
 					System.out.println(DEALER_MESSAGE + playerStatusArray.get(i).getName() + " turns: ");
 
+					// split cases
+					if(mPlayerStatus.getSplit()) {
+						System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
+							": has already splited");
+						for(int j = 0; j < 2; j++) {
+							System.out.println(DEALER_MESSAGE + "CURRENT HAND INDEX:" + j);
+							ArrayList<Card> hand = mPlayerStatus.getSplitHand(j);
+
+							if(mPlayerStatus.standSplit[j]) {
+								System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
+									": (HAND"+ j + ")has already stand, total = " + checkBustedValue(hand));
+								count++;
+							}
+							else if(mPlayerStatus.bustedSplit[j]) {
+								System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
+									": has already busted, total = " + checkBustedValue(hand));
+								count++;
+							} else {
+								
+								Hand my_open = new Hand( hand );
+								Card dealer_open = Dealer.getHand().get(1);
+
+								boolean blackjack = false;
+								if(countHandSoftTotal(hand) == 21 && hand.size() == 2) {
+									// blackjack = true;
+									mPlayerStatus.blackjackSplit[j] = true;
+									System.out.println("Your (HAND " + j + ") got a BLACKJACK!, set stand = true");
+									mPlayerStatus.standSplit[j] = true;
+								}
+
+								System.out.println("decide whether to hit...");
+		   						boolean conti = mPlayer.hit_me(my_open, dealer_open, getTable(playerStatusArray));
+		   						if(!conti) {
+		   							// mPlayerStatus.setStand(!conti);
+		   							mPlayerStatus.standSplit[j] = !conti;
+									System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
+									": (HAND" + j +  ") stand...");
+		   						} else {
+		   							// ArrayList<Card> cards = mPlayerStatus.getHand();
+		   							ArrayList<Card> cards = hand;
+									cards.add(deckOfCards.removeTop());
+									
+									if(checkBusted(cards)) {
+										// mPlayerStatus.setBusted(true);
+										mPlayerStatus.bustedSplit[j] = true;
+										System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
+									": (HAND" + j + ") busted..., total = " + checkBustedValue(cards));
+
+									} else {
+										int total = countHandSoftTotal(cards);
+										System.out.println(DEALER_MESSAGE + "your current total value(soft) of m(HAND " + j + " ) is " + total);
+									}
+		   						}
+							}
+						}
+						continue;
+					}
+					// non-split cases					
 					if(mPlayerStatus.getSurrender()) {
 						System.out.println(DEALER_MESSAGE + "player " + mPlayerStatus.getName() + 
 							": has already surrendered");
@@ -372,11 +434,35 @@ public class POOCasino {
    						}
 					}
 				}
-				if(count == 4) {
+				if(count == 4 + splitNum) {
 					System.out.println(DEALER_MESSAGE + "All players are done");
 					break;
 				}
 			}
+			// execute dealer actions:
+			System.out.println("|==============================================================|");
+			System.out.println(DEALER_MESSAGE + " dealer turns: ");
+
+			// Flip up (open) the face-down card.
+			Card facedown = Dealer.getHand().get(0);
+			Card faceup = Dealer.getHand().get(1);
+			System.out.println(DEALER_MESSAGE + " flip up the face-down card... ");
+			System.out.println(DEALER_MESSAGE + "Suit: " + facedown.getSuit() + "; Value: " + facedown.getValue());
+
+			boolean blackjack = false;
+			if(countHandSoftTotal(Dealer.getHand()) == 21) {
+				blackjack = true;
+				Dealer.setBlackjack(blackjack);
+				System.out.println(DEALER_MESSAGE + " Got a BLACKJACK!, set stand = true");
+				Dealer.setStand(true);
+			}
+
+
+
+			// If the total card value is ≤ 16 or is a soft-17, hit.
+			// Otherwise, stand.
+
+
 		}
 	}
 }

@@ -11,6 +11,7 @@ public class PlayerStatus {
 		surrender = false;
 		busted = false;
 		stand = false;
+		blackjack = false;
 		split = false;
 		doubledown = false;
 	}
@@ -51,6 +52,12 @@ public class PlayerStatus {
 			firstHand.add(mHand.get(0));
 			secondHand.add(mHand.get(1));
 			mHand.clear();
+		} else {
+			for(int i = 0; i < 2; i ++) {
+				blackjackSplit[i] = false;
+				standSplit[i] = false;
+				bustedSplit[i] = false;
+			}
 		}
 	}
 	public boolean getSplit() {
@@ -77,6 +84,14 @@ public class PlayerStatus {
 		else 
 			return null;
 	}
+	public ArrayList<Card> getSplitHand(int i) {
+		if(split == false)
+			return null; //exception
+		if(i == 0)
+			return firstHand;
+		else
+			return secondHand;
+	}
   	public String toString(ArrayList<Card> hand) {
 
   		String result = "";
@@ -99,6 +114,13 @@ public class PlayerStatus {
 	private int bet;
 	private String name;
 	private ArrayList<Card> mHand = new ArrayList<>();
+
+
+
+	public boolean[] blackjackSplit = {false, false};
+	public boolean[] standSplit = {false, false};
+	public boolean[] bustedSplit = {false, false};
+
 	private ArrayList<Card> firstHand = new ArrayList<>();
 	private ArrayList<Card> secondHand = new ArrayList<>();
 
