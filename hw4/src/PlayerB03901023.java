@@ -23,7 +23,7 @@ public class PlayerB03901023 extends Player {
 		while( (bet * 2.5)  >= get_chips()) {
 			
 			scanner = new Scanner(System.in);
-			System.out.print("Please enter your bet again");
+			System.out.println("Please enter your bet again");
 			bet = scanner.nextInt();
 		}
 
@@ -33,33 +33,68 @@ public class PlayerB03901023 extends Player {
                     Card dealer_open,
                     ArrayList<Hand> current_table){
 		
-		
-		return true;
+		//dealer_open must be ACE
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("Please enter 1 for YES or 0 for NO: ");
+		int buy = scanner.nextInt();
+
+		if(buy == 1)
+			return true;
+		else
+			return false;
 	}
 	public boolean do_surrender(Card my_open,
                    Card dealer_open,
                    ArrayList<Hand> current_table){
-		
-		return true;
+
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("Please enter 1 for YES or 0 for NO: ");
+		int sur = scanner.nextInt();
+
+		if(sur == 1)
+			return true;
+		else
+			return false;
 	}
 
 	public boolean do_split(ArrayList<Card> my_open,
                Card dealer_open,
                ArrayList<Hand> current_table){
 		
-		return true;
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("Please enter 1 for YES or 0 for NO: ");
+		int split = scanner.nextInt();
+
+		if(split == 1)
+			return true;
+		else
+			return false;
 	}
 	public boolean do_double(Hand my_open,
                 Card dealer_open,
                 ArrayList<Hand> current_table){
 		
-		return true;
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("Please enter 1 for YES or 0 for NO: ");
+		int dou = scanner.nextInt();
+
+		if(dou == 1)
+			return true;
+		else
+			return false;
 	}
 	public boolean hit_me(Hand my_open,
              Card dealer_open,
              ArrayList<Hand> current_table){
+		
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("Please enter 1 for YES or 0 for NO: ");
+		int hit = scanner.nextInt();
 
-		return true;
+		if(hit == 1)
+			return true;
+		else
+			return false;
 	}
  //    public final void decrease_chips(double diff)
  //                          throws Player.NegativeException,
