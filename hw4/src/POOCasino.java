@@ -580,9 +580,8 @@ public class POOCasino {
 									System.out.println(SYSTEM_MESSAGE + "EXCEPTION CATCHED...");
 								}
 						}
-						
 						// CASE4. If player i doesn’t get a Blackjack, and if the dealer gets busted, each player gets Bi more chips
-						else if(!mPlayerStatus.blackjackSplit[j] && Dealer.getBusted()) {
+						else if(!mPlayerStatus.blackjackSplit[j] && !mPlayerStatus.getBusted() && Dealer.getBusted()) {
 							try {
 								
 								mPlayer.increase_chips(bet);
@@ -618,8 +617,8 @@ public class POOCasino {
 						// If the dealer gets more, the player loses and Bi goes to the casino. 
 						// If the player gets more, the player wins Bi more chips. 
 						// Otherwise it is a “push” and the player just get 0 more chips.
-						else if(!mPlayerStatus.blackjackSplit[j] && !Dealer.getBlackjack()
-							&& !mPlayerStatus.bustedSplit[j] && !Dealer.getBusted()) {
+						else if( (!mPlayerStatus.blackjackSplit[j] && !Dealer.getBlackjack())
+							&& (!mPlayerStatus.bustedSplit[j] && !Dealer.getBusted())) {
 							int playerSum = countHandSoftTotal(hand);
 							int dealerSum = countHandSoftTotal(Dealer.getHand());
 							if(dealerSum > playerSum)
@@ -691,7 +690,7 @@ public class POOCasino {
 							}
 					}
 					// CASE4. If player i doesn’t get a Blackjack, and if the dealer gets busted, each player gets Bi more chips
-					else if(!mPlayerStatus.getBlackjack() && Dealer.getBusted()) {
+					else if(!mPlayerStatus.getBlackjack() && !mPlayerStatus.getBusted() && Dealer.getBusted()) {
 						try {
 							
 							mPlayer.increase_chips(bet);
@@ -727,8 +726,8 @@ public class POOCasino {
 					// If the dealer gets more, the player loses and Bi goes to the casino. 
 					// If the player gets more, the player wins Bi more chips. 
 					// Otherwise it is a “push” and the player just get 0 more chips.
-					else if(!mPlayerStatus.getBlackjack() && !Dealer.getBlackjack()
-						&& !mPlayerStatus.getBusted() && !Dealer.getBusted()) {
+					else if((!mPlayerStatus.getBlackjack() && !Dealer.getBlackjack())
+						&& (!mPlayerStatus.getBusted() && !Dealer.getBusted())) {
 
 						ArrayList<Card> hand = mPlayerStatus.getHand();
 						int playerSum = countHandSoftTotal(hand);
