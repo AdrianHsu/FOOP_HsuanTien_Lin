@@ -41,8 +41,8 @@ public class PlayerStatus {
 	public int getBet() {
 		return bet;
 	}
-	public void setInsurance(boolean buy) {
-		insurance = buy;
+	public void setInsurance(boolean _insurance) {
+		insurance = _insurance;
 	}
 	public boolean getInsurance() {
 		return insurance;
