@@ -1,12 +1,11 @@
 import foop.*;
-
+import java.util.Scanner;
 import java.util.ArrayList;
 
 public class PlayerB03901023 extends Player {
 
-	public PlayerB03901023(String _name, int _chips){
+	public PlayerB03901023(int _chips){
 		super(_chips);
-		name = _name;
 	}
 	
 	// protected final double get_chips(){
@@ -17,7 +16,18 @@ public class PlayerB03901023 extends Player {
            int total_player,
            int my_position){
 
-		return 1;
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Please enter your bet: ");
+		int bet = scanner.nextInt();
+
+		while( (bet * 2.5)  >= get_chips()) {
+			
+			scanner = new Scanner(System.in);
+			System.out.print("Please enter your bet again");
+			bet = scanner.nextInt();
+		}
+
+		return bet;
 	}
 	public boolean buy_insurance(Card my_open,
                     Card dealer_open,
@@ -50,7 +60,7 @@ public class PlayerB03901023 extends Player {
 
 		return true;
 	}
-	// public final void decrease_chips(double diff)
+ //    public final void decrease_chips(double diff)
  //                          throws Player.NegativeException,
  //                                 Player.BrokeException {
 
@@ -59,11 +69,15 @@ public class PlayerB03901023 extends Player {
  //                          throws Player.NegativeException {
 
  //  	}
+
   	public String toString() {
 
-  		return "";
-  	}
+  		String result = "";
+  		result += "|================PlayerB03901023 CURRENT STATUS================|\n";
+  		result += "|	@ PLAYER NAME: Adrian Hsu\n";
+  		result += "|	@ CURRENT NUMBER OF CHIPS: " + get_chips() + "\n";
+		result += "|==============================================================|\n";
 
-  	public String getName(){return name;}
-  	private final String name;
+  		return result;
+  	}
 }
