@@ -176,7 +176,7 @@ public class POOCasino {
 			for(int i = 0; i < CURRENT_N_PLAYERS; i++)
 				System.out.println(players.get(i).toString());
 
-			System.out.println(DEALER_MESSAGE + "retrive last_table cards and shuffle...");
+			System.out.println(DEALER_MESSAGE + "retrieve last_table cards and shuffle...");
 
 			for(int i = 0; i < N_PLAYERS; i++) {
 				int bet = players.get(i).make_bet(getTable(playerStatusArray), CURRENT_N_PLAYERS, i);

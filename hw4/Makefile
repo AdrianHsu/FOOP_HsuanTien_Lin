@@ -8,4 +8,4 @@ clean:
 hw4:
 	javac -cp ./lib/ $(JAVAFLAGS) src/*java
 run:
-	java -cp ./lib/ POOCasino 100000 10000000 PlayerB03901023 PlayerB03902039 PlayerB03901023 PlayerB03902039
+	java -cp ./lib/ POOCasino 100000 1000000 PlayerB03901023 PlayerB03902039 PlayerB03901023 PlayerB03902039
